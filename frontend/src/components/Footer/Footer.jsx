@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import './Footer.css';
 import { FaFacebookF, FaTwitter, FaYoutube, FaLinkedinIn } from 'react-icons/fa'; // Ensure react-icons is installed
 

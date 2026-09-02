@@ -1,7 +1,7 @@
 .header {
   width: 100%;
   background-color: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #0855ee;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -38,7 +38,7 @@
   font-size: 28px;
   font-weight: bold;
 
-  background-color: #0f766e;
+  background-color: #172554;
   color: white;
 }
 
@@ -63,7 +63,7 @@
 
 .navigation a {
   text-decoration: none;
-  color: #374151;
+  color: #172554;
 
   font-size: 15px;
   font-weight: 500;
@@ -72,7 +72,7 @@
 }
 
 .navigation a:hover {
-  color: #0f766e;
+  color: #172554;
 }
 
 /* Appointment Button */
@@ -80,7 +80,7 @@
 .appointment-btn {
   border: none;
 
-  background-color: #0f766e;
+  background-color: #1e3a8a ;
   color: white;
 
   padding: 12px 20px;
@@ -96,5 +96,5 @@
 }
 
 .appointment-btn:hover {
-  background-color: #115e59;
+  background-color: #172554;
 }
