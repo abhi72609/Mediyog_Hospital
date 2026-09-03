@@ -11,17 +11,17 @@ function Header() {
 
                     <div>
                         <h2>Mediyog</h2>
-                        <h3>Hospital</h3>
+                        <h2>Hospital</h2>
                     </div>
                 </div>
 
                 {/* Navigation */}
                 <nav className='navigation'>
                     <a href="/">Home</a>
-                    <a href="/about">About</a>
                     <a href="/departments">Departments</a>
                     <a href="/doctors">Doctors</a>
                     <a href="/services">Services</a>
+                    <a href="/about">About</a>
                     <a href="/contact">Contact</a>
                 </nav>
 
