@@ -1,7 +1,7 @@
 import { useState } from "react";
-import doctors from "./DoctorData";
-import DoctorCard from "./DoctorCard";
-import "./Doctors.css";
+import doctors from "./DoctorData.jsx";
+import DoctorCard from "./DoctorCard.jsx";
+import "./Doctor.css";
 
 function Doctors() {
 
