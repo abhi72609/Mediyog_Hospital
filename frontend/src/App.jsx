@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Header from "./components/Header/Header.jsx";
-import Home from "./components/Home/Home.jsx";
-import Doctors from "./components/doctors/Doctors.jsx";
+import Home from "./components/home/Home.jsx";
 import About from "./components/About/About.jsx";
+import Doctors from "./components/doctors/Doctors.jsx";
+import Departments from "./components/departments/Departments.jsx";
+import Services from "./components/services/Services.jsx";
 import Footer from "./components/footer/footer.jsx";
 
 // Admin components
@@ -16,38 +18,26 @@ function App() {
   return (
     <Router>
       <div className="app-wrapper">
-
         <Header />
 
         <main className="main-content">
-
           <Routes>
+            {/* Main Single-Page Home Content */}
+            <Route path="/" element={<Home />} />
 
-            {/* Homepage */}
-            <Route
-              path="/"
-              element={
-                <>
-                  <Home />
-                  <Doctors />
-                </>
-              }
-            />
-
-            {/* Separate pages */}
+            {/* Individual views if accessed directly */}
             <Route path="/doctors" element={<Doctors />} />
+            <Route path="/departments" element={<Departments />} />
+            <Route path="/services" element={<Services />} />
             <Route path="/about" element={<About />} />
 
-            {/* Admin */}
+            {/* Admin routes */}
             <Route path="/admin" element={<AdminLogin />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />}/>
-
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
           </Routes>
-
         </main>
 
         <Footer />
-
       </div>
     </Router>
   );

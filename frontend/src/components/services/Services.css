@@ -1,0 +1,83 @@
+/* frontend/src/components/services/Services.css */
+.services-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.services-container h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-size: 2.2rem;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.service-card {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border-top: 4px solid #3498db; /* Changed from green to hospital blue */
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.service-card.expanded {
+  background: #f8fbff; /* Soft clean blue tint */
+  box-shadow: 0 12px 30px rgba(52, 152, 219, 0.2);
+  border-top: 4px solid #2980b9;
+}
+
+.service-card h3 {
+  margin-top: 0;
+  color: #333333;
+  font-size: 1.25rem;
+}
+
+.service-card p {
+  color: #666666;
+  font-size: 0.95rem;
+  margin-bottom: 0;
+  line-height: 1.4;
+}
+
+.extra-details {
+  overflow: hidden;
+}
+
+.detail-divider {
+  border: none;
+  height: 1px;
+  background-color: #dcdcdc;
+  margin: 12px 0;
+}
+
+.detailed-text {
+  font-size: 0.9rem;
+  color: #444444;
+  margin-bottom: 12px;
+}
+
+.service-action-btn {
+  background-color: #3498db; /* Blue accent button */
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.service-action-btn:hover {
+  background-color: #2980b9;
+}
