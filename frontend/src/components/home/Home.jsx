@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import Department from "../departments/Departments.jsx";
 import Doctors from "../doctors/Doctors.jsx";
+import Department from "../departments/Departments.jsx";
 import Services from "../services/Services.jsx";
 import About from "../About/About.jsx";
 import "./Home.css";
@@ -78,13 +78,15 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="departments">
-                <Department />
-            </section>
-
+       
             <section id="doctors">
                 <Doctors />
             </section>
+
+                 <section id="departments">
+                <Department />
+            </section>
+
 
             <section id="services">
                 <Services />
