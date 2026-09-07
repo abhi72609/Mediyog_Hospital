@@ -1,100 +1,241 @@
 .header {
-  width: 100%;
-  background-color: #ffffff;
-  border-bottom: 1px solid #0855ee;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid #0855ee;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .header-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 16px 24px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 16px 35px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
 }
 
-/* Logo */
-
 .logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
 }
 
 .logo-icon {
-  width: 42px;
-  height: 42px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 10px;
-
-  font-size: 28px;
-  font-weight: bold;
-
-  background-color: #172554;
-  color: white;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 30px;
+    font-weight: bold;
+    background-color: #172554;
+    color: white;
+    flex-shrink: 0;
 }
 
 .logo h2 {
-  margin: 0;
-  font-size: 22px;
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.05;
 }
-
-.logo p {
-  margin: 0;
-  font-size: 12px;
-  color: #6b7280;
-}
-
-/* Navigation */
 
 .navigation {
-  display: flex;
-  align-items: center;
-  gap: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
 }
 
 .navigation a {
-  text-decoration: none;
-  color: #172554;
-
-  font-size: 15px;
-  font-weight: 500;
-
-  transition: 0.3s;
+    text-decoration: none;
+    color: #172554;
+    font-size: 16px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: 0.3s;
 }
 
 .navigation a:hover {
-  color: #172554;
+    color: #2563eb;
 }
 
-/* Appointment Button */
+.admin-link {
+    font-weight: bold !important;
+    color: #1e3a8a !important;
+}
 
 .appointment-btn {
-  border: none;
-
-  background-color: #1e3a8a ;
-  color: white;
-
-  padding: 12px 20px;
-
-  border-radius: 8px;
-
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition: 0.3s;
+    border: none;
+    background-color: #1e3a8a;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.3s;
+    flex-shrink: 0;
 }
 
 .appointment-btn:hover {
-  background-color: #172554;
+    background-color: #172554;
+}
+
+.menu-button {
+    display: none;
+    border: none;
+    background: transparent;
+    color: #172554;
+    font-size: 30px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.mobile-appointment-btn {
+    display: none;
+}
+
+@media (max-width: 1200px) {
+    .header-container {
+        padding: 14px 20px;
+        gap: 18px;
+    }
+
+    .navigation {
+        gap: 16px;
+    }
+
+    .navigation a {
+        font-size: 14px;
+    }
+
+    .appointment-btn {
+        padding: 10px 14px;
+        font-size: 13px;
+    }
+
+    .logo h2 {
+        font-size: 20px;
+    }
+
+    .logo-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 900px) {
+    .navigation {
+        gap: 12px;
+    }
+
+    .navigation a {
+        font-size: 13px;
+    }
+
+    .appointment-btn {
+        padding: 9px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        min-height: 68px;
+        padding: 12px 18px;
+        position: relative;
+    }
+
+    .logo h2 {
+        font-size: 19px;
+    }
+
+    .logo-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 25px;
+    }
+
+    .menu-button {
+        display: block;
+        margin-left: auto;
+    }
+
+    .appointment-btn {
+        display: none;
+    }
+
+    .navigation {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        border-top: 1px solid #e5e7eb;
+        border-bottom: 1px solid #dbeafe;
+        padding: 18px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .navigation-open {
+        display: flex;
+    }
+
+    .navigation a {
+        width: 100%;
+        padding: 12px 8px;
+        font-size: 16px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .admin-link {
+        padding: 12px 8px !important;
+    }
+
+    .mobile-appointment-btn {
+        display: block;
+        width: 100%;
+        margin-top: 12px;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background-color: #1e3a8a;
+        color: white;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-container {
+        padding: 10px 14px;
+    }
+
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 23px;
+        border-radius: 9px;
+    }
+
+    .logo h2 {
+        font-size: 18px;
+    }
+
+    .menu-button {
+        font-size: 28px;
+    }
 }
