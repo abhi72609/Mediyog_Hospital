@@ -11,14 +11,22 @@ function Header() {
         setIsMenuOpen(false);
     };
 
+    const toggleLanguage = () => {
+        const currentCookie = document.cookie;
+        if (currentCookie.includes("/en/hi")) {
+            document.cookie = "googtrans=/en/en; path=/";
+        } else {
+            document.cookie = "googtrans=/en/hi; path=/";
+        }
+        window.location.reload();
+    };
+
     return (
         <>
             <header className="header">
                 <div className="header-container">
-
                     <div className="logo">
                         <span className="logo-icon">+</span>
-
                         <div>
                             <h2>Mediyog</h2>
                             <h2>Hospital</h2>
@@ -29,39 +37,18 @@ function Header() {
                         className="menu-button"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                     >
-                        {isMenuOpen ? "×" : "☰"}
+                        {isMenuOpen ? "�" : "?"}
                     </button>
 
                     <nav className={`navigation ${isMenuOpen ? "navigation-open" : ""}`}>
-                        <a href="/" onClick={closeMenu}>
-                            Home
-                        </a>
+                        <a href="/" onClick={closeMenu}>Home</a>
+                        <a href="/#doctors" onClick={closeMenu}>Doctors</a>
+                        <a href="/#departments" onClick={closeMenu}>Departments</a>
+                        <a href="/#services" onClick={closeMenu}>Services</a>
+                        <a href="/#about" onClick={closeMenu}>About</a>
+                        <a href="/#contact" onClick={closeMenu}>Contact</a>
 
-                        <a href="/#doctors" onClick={closeMenu}>
-                            Doctors
-                        </a>
-
-                        <a href="/#departments" onClick={closeMenu}>
-                            Departments
-                        </a>
-
-                        <a href="/#services" onClick={closeMenu}>
-                            Services
-                        </a>
-
-                        <a href="/#about" onClick={closeMenu}>
-                            About
-                        </a>
-
-                        <a href="/#contact" onClick={closeMenu}>
-                            Contact
-                        </a>
-
-                        <Link
-                            to="/admin"
-                            className="admin-link"
-                            onClick={closeMenu}
-                        >
+                        <Link to="/admin" className="admin-link" onClick={closeMenu}>
                             Admin Login
                         </Link>
 
@@ -76,13 +63,16 @@ function Header() {
                         </button>
                     </nav>
 
+                    <button className="lang-toggle-btn" onClick={toggleLanguage}>
+                        ?? ?????? / English
+                    </button>
+
                     <button
                         className="appointment-btn"
                         onClick={() => setIsModalOpen(true)}
                     >
                         Book Appointment
                     </button>
-
                 </div>
             </header>
 

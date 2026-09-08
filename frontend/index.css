@@ -1,0 +1,13 @@
+/* Force-hide Google Translate top banner iframe */
+iframe.goog-te-banner-frame {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+/* Force body position back to top so it doesn't leave a white gap */
+body {
+  top: 0px !important;
+  position: static !important;
+}
