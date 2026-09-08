@@ -37,7 +37,7 @@ function Header() {
                         className="menu-button"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                     >
-                        {isMenuOpen ? "�" : "?"}
+                        {isMenuOpen ? "�" : "?"}
                     </button>
 
                     <nav className={`navigation ${isMenuOpen ? "navigation-open" : ""}`}>
@@ -64,7 +64,7 @@ function Header() {
                     </nav>
 
                     <button className="lang-toggle-btn" onClick={toggleLanguage}>
-                        ?? ?????? / English
+                        🌐 हिन्दी / English
                     </button>
 
                     <button
