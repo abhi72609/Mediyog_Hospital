@@ -8,12 +8,31 @@ const AdminLogin = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (email === 'admin@mediyog.com' && password === 'admin123') {
-      navigate('/admin/dashboard');
-    } else {
-      setError('Invalid credentials. Try admin@mediyog.com / admin123');
+    setError(''); // Clear previous errors
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/admin/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Save session flag so other admin pages know you're logged in
+        localStorage.setItem('isAdminAuthenticated', 'true');
+        navigate('/admin/dashboard');
+      } else {
+        setError(data.detail || 'Invalid email or password');
+      }
+    } catch (err) {
+      console.error('Connection error:', err);
+      setError('Could not connect to the backend server. Make sure FastAPI is running.');
     }
   };
 
@@ -51,9 +70,9 @@ const AdminLogin = () => {
         </form>
 
         <div className="admin-help-box">
-          <p><strong>Demo Testing Credentials:</strong></p>
-          <p>Email: <code>admin@mediyog.com</code></p>
-          <p>Password: <code>admin123</code></p>
+       {/* Direct text inside a paragraph tag     <p><strong>Demo Testing Credentials:</strong></p>
+         <p>Email: <code>admin@mediyog.com</code></p>
+         <p>Password: <code>admin123</code></p>*/} 
         </div>
       </div>
     </div>

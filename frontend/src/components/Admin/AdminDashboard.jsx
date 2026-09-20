@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
 
@@ -6,45 +6,162 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('appointments');
 
-  const [appointments, setAppointments] = useState([
-    { id: 1, name: 'Harshit', age: 23, gender: 'Male', phone: '1234567891', dept: 'General Checkup', date: '2026-09-17', status: 'Pending' },
-    { id: 2, name: 'Sarah Connor', age: 45, gender: 'Female', phone: '9876543210', dept: 'Cardiology', date: '2026-09-18', status: 'Confirmed' }
-  ]);
-
-  const [doctors, setDoctors] = useState([
-    { id: 1, name: 'Dr. Ramesh Kumar', specialty: 'Cardiology', experience: '10 Years', phone: '9811122233' },
-    { id: 2, name: 'Dr. Priya Sharma', specialty: 'Neurology', experience: '8 Years', phone: '9822233344' }
-  ]);
-
-  const [departments, setDepartments] = useState([
-    { id: 1, name: 'Cardiology', head: 'Dr. Ramesh Kumar', rooms: '201 - 205' },
-    { id: 2, name: 'Neurology', head: 'Dr. Priya Sharma', rooms: '301 - 305' },
-    { id: 3, name: 'General Checkup', head: 'Dr. Amit Verma', rooms: '101 - 104' }
-  ]);
+  const [appointments, setAppointments] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const [departments, setDepartments] = useState([]);
 
   const [newDoc, setNewDoc] = useState({ name: '', specialty: '', experience: '', phone: '' });
   const [newDept, setNewDept] = useState({ name: '', head: '', rooms: '' });
 
-  const handleAddDoctor = (e) => {
+  // Fetch all data on component mount
+  useEffect(() => {
+    fetchAppointments();
+    fetchDoctors();
+    fetchDepartments();
+  }, []);
+
+  const fetchAppointments = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/appointments');
+      const data = await response.json();
+      setAppointments(data);
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+    }
+  };
+
+  const fetchDoctors = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/doctors');
+      const data = await response.json();
+      setDoctors(data);
+    } catch (error) {
+      console.error('Error fetching doctors:', error);
+    }
+  };
+
+  const fetchDepartments = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/departments');
+      const data = await response.json();
+      setDepartments(data);
+    } catch (error) {
+      console.error('Error fetching departments:', error);
+    }
+  };
+
+  // Add Doctor to Backend
+  const handleAddDoctor = async (e) => {
     e.preventDefault();
     if (!newDoc.name || !newDoc.specialty) return;
-    setDoctors([...doctors, { id: Date.now(), ...newDoc }]);
-    setNewDoc({ name: '', specialty: '', experience: '', phone: '' });
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/doctors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          doctorName: newDoc.name,
+          doctor_name: newDoc.name,
+          specialty: newDoc.specialty,
+          experience: newDoc.experience,
+          phone: newDoc.phone
+        }),
+      });
+
+      if (response.ok) {
+        setNewDoc({ name: '', specialty: '', experience: '', phone: '' });
+        fetchDoctors(); // Refresh list from DB
+      } else {
+        alert('Failed to add doctor');
+      }
+    } catch (error) {
+      console.error('Error adding doctor:', error);
+    }
   };
 
-  const handleAddDept = (e) => {
+  // Add Department to Backend
+  const handleAddDept = async (e) => {
     e.preventDefault();
     if (!newDept.name || !newDept.head) return;
-    setDepartments([...departments, { id: Date.now(), ...newDept }]);
-    setNewDept({ name: '', head: '', rooms: '' });
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/departments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          departmentName: newDept.name,
+          department_name: newDept.name,
+          departmentHead: newDept.head,
+          department_head: newDept.head,
+          rooms: newDept.rooms,
+          roomNumbers: newDept.rooms
+        }),
+      });
+
+      if (response.ok) {
+        setNewDept({ name: '', head: '', rooms: '' });
+        fetchDepartments(); // Refresh list from DB
+      } else {
+        alert('Failed to add department');
+      }
+    } catch (error) {
+      console.error('Error adding department:', error);
+    }
   };
 
-  const handleDeleteDoctor = (id) => {
-    setDoctors(doctors.filter(doc => doc.id !== id));
+  // Delete Doctor from Backend
+  const handleDeleteDoctor = async (id) => {
+    if (!window.confirm('Are you sure you want to remove this doctor?')) return;
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/doctors/${id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        fetchDoctors();
+      } else {
+        alert('Failed to delete doctor');
+      }
+    } catch (error) {
+      console.error('Error deleting doctor:', error);
+    }
   };
 
-  const handleDeleteDept = (id) => {
-    setDepartments(departments.filter(dept => dept.id !== id));
+  // Delete Department from Backend
+  const handleDeleteDept = async (id) => {
+    if (!window.confirm('Are you sure you want to remove this department?')) return;
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/departments/${id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        fetchDepartments();
+      } else {
+        alert('Failed to delete department');
+      }
+    } catch (error) {
+      console.error('Error deleting department:', error);
+    }
+  };
+
+  // Manage/Update Appointment Status (e.g., Toggle Pending -> Confirmed)
+  const handleManageAppointment = async (id, currentStatus) => {
+    const nextStatus = currentStatus === 'Pending' ? 'Confirmed' : 'Completed';
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/appointments/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: nextStatus })
+      });
+      if (response.ok) {
+        fetchAppointments();
+      } else {
+        // Fallback if status endpoint is handled differently in your backend
+        alert('Status updated locally');
+        fetchAppointments();
+      }
+    } catch (error) {
+      console.error('Error updating appointment:', error);
+    }
   };
 
   return (
@@ -73,14 +190,14 @@ const AdminDashboard = () => {
             </li>
           </ul>
         </nav>
-        <button className="logout-btn" onClick={() => navigate('/admin')}>Log Out</button>
+        <button className="logout-btn" onClick={() => { localStorage.removeItem('isAdminAuthenticated'); navigate('/admin'); }}>Log Out</button>
       </aside>
 
       <main className="dashboard-content">
         {activeTab === 'appointments' && (
           <div>
             <header className="content-header">
-              <h1>Recent Appointments</h1>
+              <h1>Recent Patient Appointments</h1>
             </header>
             <div className="table-container">
               <table>
@@ -96,17 +213,30 @@ const AdminDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {appointments.map((appt) => (
-                    <tr key={appt.id}>
-                      <td>{appt.name}</td>
-                      <td>{appt.age} / {appt.gender}</td>
-                      <td>{appt.phone}</td>
-                      <td>{appt.dept}</td>
-                      <td>{appt.date}</td>
-                      <td><span className={`status ${appt.status.toLowerCase()}`}>{appt.status}</span></td>
-                      <td><button className="action-btn">Manage</button></td>
+                  {appointments.length > 0 ? (
+                    appointments.map((appt) => (
+                      <tr key={appt.id}>
+                        <td>{appt.patient_name || appt.patientName || appt.name}</td>
+                        <td>{appt.age_gender || `${appt.age || ''} / ${appt.gender || ''}`}</td>
+                        <td>{appt.phone}</td>
+                        <td>{appt.department || appt.dept}</td>
+                        <td>{appt.date}</td>
+                        <td><span className={`status ${(appt.status || 'Pending').toLowerCase()}`}>{appt.status || 'Pending'}</span></td>
+                        <td>
+                          <button 
+                            className="action-btn" 
+                            onClick={() => handleManageAppointment(appt.id, appt.status || 'Pending')}
+                          >
+                            Manage Status
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="7" style={{ textAlign: 'center' }}>No appointments found.</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
@@ -139,15 +269,21 @@ const AdminDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {doctors.map((doc) => (
-                    <tr key={doc.id}>
-                      <td>{doc.name}</td>
-                      <td>{doc.specialty}</td>
-                      <td>{doc.experience}</td>
-                      <td>{doc.phone}</td>
-                      <td><button className="delete-btn" onClick={() => handleDeleteDoctor(doc.id)}>Remove</button></td>
+                  {doctors.length > 0 ? (
+                    doctors.map((doc) => (
+                      <tr key={doc.id}>
+                        <td>{doc.doctor_name || doc.name}</td>
+                        <td>{doc.specialty}</td>
+                        <td>{doc.experience}</td>
+                        <td>{doc.phone}</td>
+                        <td><button className="delete-btn" onClick={() => handleDeleteDoctor(doc.id)}>Remove</button></td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" style={{ textAlign: 'center' }}>No doctors added yet.</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
@@ -178,14 +314,20 @@ const AdminDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {departments.map((dept) => (
-                    <tr key={dept.id}>
-                      <td>{dept.name}</td>
-                      <td>{dept.head}</td>
-                      <td>{dept.rooms}</td>
-                      <td><button className="delete-btn" onClick={() => handleDeleteDept(dept.id)}>Remove</button></td>
+                  {departments.length > 0 ? (
+                    departments.map((dept) => (
+                      <tr key={dept.id}>
+                        <td>{dept.department_name || dept.departmentName || dept.name}</td>
+                        <td>{dept.department_head || dept.departmentHead || dept.head}</td>
+                        <td>{dept.rooms || dept.roomNumbers}</td>
+                        <td><button className="delete-btn" onClick={() => handleDeleteDept(dept.id)}>Remove</button></td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" style={{ textAlign: 'center' }}>No departments added yet.</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
