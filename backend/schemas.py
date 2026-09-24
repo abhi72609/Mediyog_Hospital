@@ -13,12 +13,9 @@ class DoctorCreate(BaseModel):
     phone: str
 
 class DepartmentCreate(BaseModel):
-    departmentName: Optional[str] = None
-    department_name: Optional[str] = None
-    departmentHead: Optional[str] = None
-    department_head: Optional[str] = None
-    rooms: Optional[str] = None
-    roomNumbers: Optional[str] = None
+    departmentName: str
+    departmentHead: str
+    rooms: str
 
 class AppointmentCreate(BaseModel):
     patientName: Optional[str] = None

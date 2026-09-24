@@ -319,7 +319,7 @@ const AdminDashboard = () => {
                       <tr key={dept.id}>
                         <td>{dept.department_name || dept.departmentName || dept.name}</td>
                         <td>{dept.department_head || dept.departmentHead || dept.head}</td>
-                        <td>{dept.rooms || dept.roomNumbers}</td>
+                        <td>{dept.room_numbers}</td>
                         <td><button className="delete-btn" onClick={() => handleDeleteDept(dept.id)}>Remove</button></td>
                       </tr>
                     ))

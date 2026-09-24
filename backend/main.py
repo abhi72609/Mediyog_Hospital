@@ -88,9 +88,9 @@ def add_department(dept: DepartmentCreate, db: Session = Depends(get_db)):
     rooms_val = dept.rooms or dept.roomNumbers or "101"
 
     new_dept = DepartmentModel(
-        department_name=dept_name,
-        department_head=dept_head,
-        rooms=rooms_val
+    department_name=dept_name,
+    department_head=dept_head,
+    room_numbers=rooms_val
     )
     db.add(new_dept)
     db.commit()
