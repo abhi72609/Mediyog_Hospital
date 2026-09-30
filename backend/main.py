@@ -47,6 +47,21 @@ def admin_login(credentials: AdminLogin, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="Invalid email or password")
     return {"success": True, "message": "Login successful"}
 
+# --- Admin Password Reset ---
+class PasswordReset(BaseModel):
+    email: str
+    new_password: str
+
+@app.post("/api/admin/reset-password")
+def reset_password(data: PasswordReset, db: Session = Depends(get_db)):
+    admin = db.query(AdminModel).filter(AdminModel.email == data.email).first()
+    if not admin:
+        raise HTTPException(status_code=404, detail="Admin email not found")
+    
+    admin.password = data.new_password
+    db.commit()
+    return {"success": True, "message": "Password updated successfully"}
+
 # --- Doctor Management ---
 @app.get("/api/doctors")
 def get_doctors(db: Session = Depends(get_db)):
@@ -88,9 +103,9 @@ def add_department(dept: DepartmentCreate, db: Session = Depends(get_db)):
     rooms_val = dept.rooms or dept.roomNumbers or "101"
 
     new_dept = DepartmentModel(
-    department_name=dept_name,
-    department_head=dept_head,
-    room_numbers=rooms_val
+        department_name=dept_name,
+        department_head=dept_head,
+        room_numbers=rooms_val
     )
     db.add(new_dept)
     db.commit()

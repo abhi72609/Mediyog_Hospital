@@ -70,7 +70,7 @@ const AdminDashboard = () => {
 
       if (response.ok) {
         setNewDoc({ name: '', specialty: '', experience: '', phone: '' });
-        fetchDoctors(); // Refresh list from DB
+        fetchDoctors();
       } else {
         alert('Failed to add doctor');
       }
@@ -100,7 +100,7 @@ const AdminDashboard = () => {
 
       if (response.ok) {
         setNewDept({ name: '', head: '', rooms: '' });
-        fetchDepartments(); // Refresh list from DB
+        fetchDepartments();
       } else {
         alert('Failed to add department');
       }
@@ -143,24 +143,21 @@ const AdminDashboard = () => {
     }
   };
 
-  // Manage/Update Appointment Status (e.g., Toggle Pending -> Confirmed)
-  const handleManageAppointment = async (id, currentStatus) => {
-    const nextStatus = currentStatus === 'Pending' ? 'Confirmed' : 'Completed';
+  // Update Appointment Status via Dropdown
+  const handleStatusChange = async (id, newStatus) => {
     try {
       const response = await fetch(`http://127.0.0.1:8000/api/appointments/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: nextStatus })
+        body: JSON.stringify({ status: newStatus })
       });
       if (response.ok) {
-        fetchAppointments();
+        fetchAppointments(); // Refresh list to reflect updated status
       } else {
-        // Fallback if status endpoint is handled differently in your backend
-        alert('Status updated locally');
-        fetchAppointments();
+        alert('Failed to update status');
       }
     } catch (error) {
-      console.error('Error updating appointment:', error);
+      console.error('Error updating status:', error);
     }
   };
 
@@ -209,7 +206,7 @@ const AdminDashboard = () => {
                     <th>Department</th>
                     <th>Date</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th>Manage Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -221,14 +218,28 @@ const AdminDashboard = () => {
                         <td>{appt.phone}</td>
                         <td>{appt.department || appt.dept}</td>
                         <td>{appt.date}</td>
-                        <td><span className={`status ${(appt.status || 'Pending').toLowerCase()}`}>{appt.status || 'Pending'}</span></td>
                         <td>
-                          <button 
-                            className="action-btn" 
-                            onClick={() => handleManageAppointment(appt.id, appt.status || 'Pending')}
+                          <span className={`status ${(appt.status || 'Pending').toLowerCase()}`}>
+                            {appt.status || 'Pending'}
+                          </span>
+                        </td>
+                        <td>
+                          <select 
+                            value={appt.status || 'Pending'} 
+                            onChange={(e) => handleStatusChange(appt.id, e.target.value)}
+                            style={{
+                              padding: '6px 10px',
+                              borderRadius: '6px',
+                              border: '1px solid #ccc',
+                              cursor: 'pointer',
+                              fontWeight: '500',
+                              backgroundColor: '#f9f9f9'
+                            }}
                           >
-                            Manage Status
-                          </button>
+                            <option value="Pending">Pending</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Completed">Completed</option>
+                          </select>
                         </td>
                       </tr>
                     ))
@@ -319,7 +330,7 @@ const AdminDashboard = () => {
                       <tr key={dept.id}>
                         <td>{dept.department_name || dept.departmentName || dept.name}</td>
                         <td>{dept.department_head || dept.departmentHead || dept.head}</td>
-                        <td>{dept.room_numbers}</td>
+                        <td>{dept.rooms || dept.roomNumbers}</td>
                         <td><button className="delete-btn" onClick={() => handleDeleteDept(dept.id)}>Remove</button></td>
                       </tr>
                     ))
