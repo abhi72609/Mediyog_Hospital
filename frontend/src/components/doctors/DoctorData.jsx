@@ -1,52 +1,44 @@
-const DoctorData = [
+import drSandeep from "../../assets/Dr Sandeep Kumar.png";
+import drSimran from "../../assets/Dr. Simran Arya.png";
+import drAbhishek from "../../assets/Dr. Abhishek.png";
+
+
+const doctorData = [
   {
     id: 1,
-    name: "Dr. Rahul Sharma",
+    name: "Dr. Sandeep Kumar",
     specialization: "Cardiologist",
-    experience: "15+ Years Experience",
-    operations: "1200+ Operations",
-    image: "/doctors/doctor1.jpg",
+    experience: "11+ Years Experience",
+    operations: "120+ Operations",
+    image: drSandeep,
   },
+
   {
     id: 2,
-    name: "Dr. Priya Singh",
+    name: "Dr. Simran Arya",
     specialization: "Neurologist",
-    experience: "12+ Years Experience",
-    operations: "950+ Operations",
-    image: "/doctors/doctor2.jpg",
+    experience: "9+ Years Experience",
+    operations: "145+ Operations",
+    image: drSimran,
   },
+
   {
     id: 3,
-    name: "Dr. Amit Kumar",
+    name: "Dr. Abhishek",
     specialization: "Orthopedic Surgeon",
-    experience: "18+ Years Experience",
-    operations: "1500+ Operations",
-    image: "/doctors/doctor3.jpg",
+    experience: "10+ Years Experience",
+    operations: "150+ Operations",
+    image: drAbhishek,
   },
+
   {
     id: 4,
-    name: "Dr. Neha Verma",
-    specialization: "Dermatologist",
-    experience: "10+ Years Experience",
-    operations: "800+ Operations",
-    image: "/doctors/doctor4.jpg",
-  },
-  {
-    id: 5,
-    name: "Dr. Arjun Mehta",
-    specialization: "General Surgeon",
-    experience: "14+ Years Experience",
-    operations: "1100+ Operations",
-    image: "/doctors/doctor5.jpg",
-  },
-  {
-    id: 6,
-    name: "Dr. Sneha Gupta",
-    specialization: "Pediatrician",
-    experience: "11+ Years Experience",
-    operations: "700+ Operations",
-    image: "/doctors/doctor6.jpg",
+    name: "Dr. Abhishek",
+    specialization: "Orthopedic Surgeon",
+    experience: "12+ Years Experience",
+    operations: "100+ Operations",
+    image: drAbhishek,
   },
 ];
 
-export default DoctorData;
+export default doctorData;

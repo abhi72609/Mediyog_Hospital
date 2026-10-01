@@ -10,7 +10,7 @@ import OT from "../../assets/ot.png";
 import Reception from "../../assets/reception.png";
 import Hospital from "../../assets/hospital.png";
 
-export default function Home() {
+export default function Home({ onBookAppointment }) {
     const images = [Poster, OT, Reception, Hospital];
 
     // Add first image again at the end for the infinite loop effect
@@ -80,7 +80,7 @@ export default function Home() {
 
        
             <section id="doctors">
-                <Doctors />
+                <Doctors onBookAppointment={onBookAppointment}/>
             </section>
 
                  <section id="departments">

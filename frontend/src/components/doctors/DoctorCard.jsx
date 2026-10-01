@@ -1,28 +1,26 @@
-function DoctorCard({ doctor }) {
+export default function DoctorCard({ doctor, onBookAppointment }) {
   return (
     <div className="doctor-card">
 
-      <div className="doctor-image-container">
-        <img
-          src={doctor.image}
-          alt={doctor.name}
-          className="doctor-image"
-        />
-      </div>
+      <img
+        src={doctor.image}
+        alt={doctor.name}
+      />
 
       <div className="doctor-info">
 
         <h3>{doctor.name}</h3>
 
-        <p className="doctor-specialization">
-          {doctor.specialization}
-        </p>
+        <p>{doctor.specialization}</p>
 
         <p>{doctor.experience}</p>
 
         <p>{doctor.operations}</p>
 
-        <button className="doctor-book-btn">
+        <button
+          className="book-doctor-btn"
+          onClick={() => onBookAppointment(doctor)}
+        >
           Book Appointment
         </button>
 
@@ -31,5 +29,3 @@ function DoctorCard({ doctor }) {
     </div>
   );
 }
-
-export default DoctorCard;
