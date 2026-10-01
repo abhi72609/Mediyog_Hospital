@@ -60,7 +60,7 @@ export default function Department() {
                   >
                     <hr className="detail-divider" />
                     <p className="detailed-text">{dept.details}</p>
-                   
+
                   </motion.div>
                 )}
               </AnimatePresence>

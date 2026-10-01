@@ -167,20 +167,20 @@ const AdminDashboard = () => {
         <h2>Mediyog Admin</h2>
         <nav>
           <ul>
-            <li 
-              className={activeTab === 'appointments' ? 'active' : ''} 
+            <li
+              className={activeTab === 'appointments' ? 'active' : ''}
               onClick={() => setActiveTab('appointments')}
             >
               Appointments
             </li>
-            <li 
-              className={activeTab === 'doctors' ? 'active' : ''} 
+            <li
+              className={activeTab === 'doctors' ? 'active' : ''}
               onClick={() => setActiveTab('doctors')}
             >
               Doctors
             </li>
-            <li 
-              className={activeTab === 'departments' ? 'active' : ''} 
+            <li
+              className={activeTab === 'departments' ? 'active' : ''}
               onClick={() => setActiveTab('departments')}
             >
               Departments
@@ -224,8 +224,8 @@ const AdminDashboard = () => {
                           </span>
                         </td>
                         <td>
-                          <select 
-                            value={appt.status || 'Pending'} 
+                          <select
+                            value={appt.status || 'Pending'}
                             onChange={(e) => handleStatusChange(appt.id, e.target.value)}
                             style={{
                               padding: '6px 10px',
@@ -259,12 +259,12 @@ const AdminDashboard = () => {
             <header className="content-header">
               <h1>Manage Doctors</h1>
             </header>
-            
+
             <form onSubmit={handleAddDoctor} className="admin-inline-form">
-              <input type="text" placeholder="Doctor Name" value={newDoc.name} onChange={e => setNewDoc({...newDoc, name: e.target.value})} required />
-              <input type="text" placeholder="Specialty" value={newDoc.specialty} onChange={e => setNewDoc({...newDoc, specialty: e.target.value})} required />
-              <input type="text" placeholder="Experience" value={newDoc.experience} onChange={e => setNewDoc({...newDoc, experience: e.target.value})} required />
-              <input type="text" placeholder="Phone" value={newDoc.phone} onChange={e => setNewDoc({...newDoc, phone: e.target.value})} required />
+              <input type="text" placeholder="Doctor Name" value={newDoc.name} onChange={e => setNewDoc({ ...newDoc, name: e.target.value })} required />
+              <input type="text" placeholder="Specialty" value={newDoc.specialty} onChange={e => setNewDoc({ ...newDoc, specialty: e.target.value })} required />
+              <input type="text" placeholder="Experience" value={newDoc.experience} onChange={e => setNewDoc({ ...newDoc, experience: e.target.value })} required />
+              <input type="text" placeholder="Phone" value={newDoc.phone} onChange={e => setNewDoc({ ...newDoc, phone: e.target.value })} required />
               <button type="submit" className="add-btn">+ Add Doctor</button>
             </form>
 
@@ -308,9 +308,9 @@ const AdminDashboard = () => {
             </header>
 
             <form onSubmit={handleAddDept} className="admin-inline-form">
-              <input type="text" placeholder="Department Name" value={newDept.name} onChange={e => setNewDept({...newDept, name: e.target.value})} required />
-              <input type="text" placeholder="Department Head" value={newDept.head} onChange={e => setNewDept({...newDept, head: e.target.value})} required />
-              <input type="text" placeholder="Room Numbers" value={newDept.rooms} onChange={e => setNewDept({...newDept, rooms: e.target.value})} required />
+              <input type="text" placeholder="Department Name" value={newDept.name} onChange={e => setNewDept({ ...newDept, name: e.target.value })} required />
+              <input type="text" placeholder="Department Head" value={newDept.head} onChange={e => setNewDept({ ...newDept, head: e.target.value })} required />
+              <input type="text" placeholder="Room Numbers" value={newDept.rooms} onChange={e => setNewDept({ ...newDept, rooms: e.target.value })} required />
               <button type="submit" className="add-btn">+ Add Department</button>
             </form>
 

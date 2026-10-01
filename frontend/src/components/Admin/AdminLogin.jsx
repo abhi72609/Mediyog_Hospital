@@ -6,7 +6,7 @@ import './Admin.css';
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
+
   // Reset Flow States
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [step, setStep] = useState(1); // Step 1: Enter Email, Step 2: Enter OTP, Step 3: New Password
@@ -133,40 +133,40 @@ const AdminLogin = () => {
         <div className="admin-header-icon">🛡️</div>
         <h2>Mediyog Secure Portal</h2>
         <p className="admin-subtitle">
-          {!isForgotPassword 
-            ? 'Authorized Hospital Personnel Only' 
+          {!isForgotPassword
+            ? 'Authorized Hospital Personnel Only'
             : step === 1 ? 'Step 1: Enter Email for OTP' : step === 2 ? 'Step 2: Enter 6-Digit OTP' : 'Step 3: Set New Password'}
         </p>
-        
+
         {error && <div className="error-message">{error}</div>}
         {successMsg && <div className="success-message" style={{ color: '#15803d', background: '#dcfce7', padding: '12px', borderRadius: '8px', marginBottom: '20px', fontSize: '14px', border: '1px solid #bbf7d0', textAlign: 'center' }}>{successMsg}</div>}
-        
+
         {!isForgotPassword ? (
           /* --- LOGIN FORM --- */
           <form onSubmit={handleLogin} className="admin-form">
             <div className="input-group">
               <label>Admin Email</label>
-              <input 
-                type="email" 
-                placeholder="name@mediyog.com" 
+              <input
+                type="email"
+                placeholder="name@mediyog.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required 
+                required
               />
             </div>
             <div className="input-group">
               <label>Password</label>
-              <input 
-                type="password" 
-                placeholder="••••••••••••" 
+              <input
+                type="password"
+                placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required 
+                required
               />
             </div>
-            
+
             <div style={{ textAlign: 'right', marginTop: '-10px' }}>
-              <span 
+              <span
                 onClick={() => { setIsForgotPassword(true); setStep(1); setError(''); setSuccessMsg(''); }}
                 style={{ color: '#3b82f6', fontSize: '13px', cursor: 'pointer', textDecoration: 'underline', fontWeight: '500' }}
               >
@@ -183,19 +183,19 @@ const AdminLogin = () => {
               <form onSubmit={handleSendOtp} className="admin-form">
                 <div className="input-group">
                   <label>Admin Email</label>
-                  <input 
-                    type="email" 
-                    placeholder="name@mediyog.com" 
+                  <input
+                    type="email"
+                    placeholder="name@mediyog.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    required 
+                    required
                   />
                 </div>
                 <button type="submit" className="admin-submit-btn" disabled={loading}>
                   {loading ? 'Sending OTP...' : 'Send Verification OTP'}
                 </button>
                 <div style={{ textAlign: 'center', marginTop: '10px' }}>
-                  <span 
+                  <span
                     onClick={() => { setIsForgotPassword(false); setStep(1); setError(''); setSuccessMsg(''); }}
                     style={{ color: '#3b82f6', fontSize: '13px', cursor: 'pointer', textDecoration: 'underline' }}
                   >
@@ -209,18 +209,18 @@ const AdminLogin = () => {
               <form onSubmit={handleVerifyOtp} className="admin-form">
                 <div className="input-group">
                   <label>Enter 6-Digit OTP Code</label>
-                  <input 
-                    type="text" 
-                    placeholder="123456" 
+                  <input
+                    type="text"
+                    placeholder="123456"
                     maxLength="6"
                     value={inputOtp}
                     onChange={(e) => setInputOtp(e.target.value)}
-                    required 
+                    required
                   />
                 </div>
                 <button type="submit" className="admin-submit-btn">Verify OTP</button>
                 <div style={{ textAlign: 'center', marginTop: '10px' }}>
-                  <span 
+                  <span
                     onClick={() => setStep(1)}
                     style={{ color: '#3b82f6', fontSize: '13px', cursor: 'pointer', textDecoration: 'underline' }}
                   >
@@ -234,12 +234,12 @@ const AdminLogin = () => {
               <form onSubmit={handleUpdatePassword} className="admin-form">
                 <div className="input-group">
                   <label>New Password</label>
-                  <input 
-                    type="password" 
-                    placeholder="Enter new password" 
+                  <input
+                    type="password"
+                    placeholder="Enter new password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    required 
+                    required
                   />
                 </div>
                 <button type="submit" className="admin-submit-btn">Update Password</button>
