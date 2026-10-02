@@ -16,7 +16,9 @@ class DoctorModel(Base):
     doctor_name = Column(String(100), nullable=False)
     specialty = Column(String(100), nullable=False)
     experience = Column(String(50), nullable=False)
+    operations = Column(String(50), nullable=False)
     phone = Column(String(20), nullable=False)
+    image = Column(String(255), nullable=True)
 
 class DepartmentModel(Base):
     __tablename__ = "departments"

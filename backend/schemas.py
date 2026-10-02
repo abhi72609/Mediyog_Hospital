@@ -10,7 +10,9 @@ class DoctorCreate(BaseModel):
     doctor_name: Optional[str] = None
     specialty: str
     experience: str
+    operations: Optional[str] = "Not specified"
     phone: str
+    image: Optional[str] = None
 
 class DepartmentCreate(BaseModel):
     departmentName: str
