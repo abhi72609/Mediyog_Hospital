@@ -42,30 +42,27 @@ app.add_middleware(
 )
 
 
-# --- Seed or update default admin on startup ---
+# --- Seed or update default admin on application startup ---
+@app.on_event("startup")
 def seed_admin():
-    db = next(get_db())
+    db = Session(engine)
+    try:
+        admin = db.query(AdminModel).filter(
+            AdminModel.email == "admin@mediyog.com"
+        ).first()
 
-    admin = db.query(AdminModel).filter(
-        AdminModel.email == "admin@mediyog.com"
-    ).first()
-
-    if admin:
-        admin.password = "admin@1020"
-        db.commit()
-    else:
-        default_admin = AdminModel(
-            email="admin@mediyog.com",
-            password="admin@1020"
-        )
-
-        db.add(default_admin)
-        db.commit()
-
-    db.close()
-
-
-seed_admin()
+        if admin:
+            admin.password = "admin@1020"
+            db.commit()
+        else:
+            default_admin = AdminModel(
+                email="admin@mediyog.com",
+                password="admin@1020"
+            )
+            db.add(default_admin)
+            db.commit()
+    finally:
+        db.close()
 
 
 # ============================================================
