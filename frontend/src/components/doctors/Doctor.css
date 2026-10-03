@@ -103,6 +103,26 @@
 }
 
 
+.admin-inline-form input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+
+    height: 42px;
+    padding: 0 12px;
+
+    border: 1px solid #cfd8e3;
+    border-radius: 6px;
+
+    font-size: 14px;
+    outline: none;
+}
+
+.admin-inline-form input:focus {
+    border-color: #4169e1;
+    box-shadow: 0 0 0 2px rgba(65, 105, 225, 0.1);
+}
+
 .doctor-info {
   padding: 22px;
 }

@@ -1,49 +1,71 @@
+/* =========================================================
+   HEADER
+========================================================= */
+
 .header {
     width: 100%;
     background-color: #ffffff;
-    border-bottom: 1px solid #e0f2fe;
+    border-bottom: 1px solid #e0e7ff;
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
 }
 
 .header-container {
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
+
     padding: 14px 35px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 25px;
+    box-sizing: border-box;
 }
 
-/* Logo Styles */
+
+/* =========================================================
+   LOGO
+========================================================= */
+
 .logo {
     display: flex;
     align-items: center;
     gap: 12px;
+
     text-decoration: none;
+
     flex-shrink: 0;
 }
 
 .logo-badge {
     width: 40px;
     height: 40px;
-    background-color: #0284C7;
+
+    background-color: #4169E1;
+
     border-radius: 50%;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+    box-shadow:
+        0 4px 8px rgba(65, 105, 225, 0.25);
+
     flex-shrink: 0;
 }
 
 .logo-cross {
     position: relative;
+
     width: 20px;
     height: 20px;
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -51,18 +73,24 @@
 
 .logo-cross-v {
     position: absolute;
-    width: 5px;
-    height: 18px;
-    background-color: #FFFFFF;
-    border-radius: 3px;
+
+    width: 6px;
+    height: 20px;
+
+    background-color: #ffffff;
+
+    border-radius: 4px;
 }
 
 .logo-cross-h {
     position: absolute;
-    width: 18px;
-    height: 5px;
-    background-color: #FFFFFF;
-    border-radius: 3px;
+
+    width: 20px;
+    height: 6px;
+
+    background-color: #ffffff;
+
+    border-radius: 4px;
 }
 
 .logo-text {
@@ -73,7 +101,9 @@
 .logo-title {
     font-size: 1.125rem;
     font-weight: 800;
-    color: #0284C7;
+
+    color: #4169E1;
+
     letter-spacing: -0.025em;
     line-height: 1;
 }
@@ -81,97 +111,199 @@
 .logo-subtitle {
     font-size: 0.75rem;
     font-weight: 700;
+
     color: #0F172A;
+
     letter-spacing: 0.1em;
     text-transform: uppercase;
+
     margin-top: 3px;
 }
 
-/* Navigation Styles */
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
 .navigation {
     display: flex;
     align-items: center;
     justify-content: center;
+
     gap: 24px;
 }
 
 .navigation a {
     text-decoration: none;
+
     color: #172554;
+
     font-size: 15px;
     font-weight: 500;
+
     white-space: nowrap;
+
     transition: color 0.2s ease;
 }
 
 .navigation a:hover {
-    color: #0284C7;
+    color: #4169E1;
 }
 
 .admin-link {
     font-weight: 700 !important;
-    color: #0284C7 !important;
+    color: #4169E1 !important;
 }
 
-/* Action Buttons */
+.admin-link:hover {
+    color: #3157C7 !important;
+}
+
+
+/* =========================================================
+   LANGUAGE BUTTON
+   ROYAL BLUE
+========================================================= */
+
 .lang-toggle-btn {
-    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-    color: #1e3a8a;
-    border: 1px solid #cbd5e1;
+    width: auto;
+
+    background-color: #4169E1 !important;
+    color: #FFFFFF !important;
+
+    border: 1px solid #4169E1 !important;
+
     padding: 9px 16px;
+
     border-radius: 10px;
+
     font-size: 13px;
     font-weight: 600;
+
     cursor: pointer;
+
     display: flex;
     align-items: center;
+    justify-content: center;
+
     gap: 6px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
-.lang-toggle-btn:hover {
-    background: linear-gradient(135deg, #1e3a8a, #172554);
-    color: #ffffff;
-    border-color: #1e3a8a;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
-}
-
-.appointment-btn {
-    border: none;
-    background-color: #0284C7;
-    color: white;
-    padding: 11px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
     white-space: nowrap;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+
+    box-shadow:
+        0 3px 8px rgba(65, 105, 225, 0.25);
+
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
     flex-shrink: 0;
 }
 
-.appointment-btn:hover {
-    background-color: #0369A1;
+.lang-toggle-btn:hover {
+    background-color: #3157C7 !important;
+    color: #FFFFFF !important;
+
+    border-color: #3157C7 !important;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 12px rgba(65, 105, 225, 0.35);
 }
+
+.lang-toggle-btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   BOOK APPOINTMENT BUTTON
+========================================================= */
+
+.appointment-btn {
+    border: none;
+
+    background-color: #4169E1;
+
+    color: #FFFFFF;
+
+    padding: 11px 20px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
+    flex-shrink: 0;
+
+    box-shadow:
+        0 3px 8px rgba(65, 105, 225, 0.20);
+}
+
+.appointment-btn:hover {
+    background-color: #3157C7;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 12px rgba(65, 105, 225, 0.30);
+}
+
+.appointment-btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   MOBILE MENU BUTTON
+========================================================= */
 
 .menu-button {
     display: none;
+
     border: none;
+
     background: transparent;
+
     color: #172554;
+
     font-size: 28px;
+
     cursor: pointer;
+
     line-height: 1;
+
+    padding: 4px;
 }
+
+
+/* =========================================================
+   MOBILE APPOINTMENT BUTTON
+========================================================= */
 
 .mobile-appointment-btn {
     display: none;
 }
 
-/* Responsive Media Queries */
+
+/* =========================================================
+   RESPONSIVE - 1200px
+========================================================= */
+
 @media (max-width: 1200px) {
+
     .header-container {
         padding: 12px 20px;
         gap: 16px;
@@ -189,9 +321,20 @@
         padding: 10px 14px;
         font-size: 13px;
     }
+
+    .lang-toggle-btn {
+        padding: 9px 14px;
+        font-size: 13px;
+    }
 }
 
+
+/* =========================================================
+   RESPONSIVE - 900px
+========================================================= */
+
 @media (max-width: 900px) {
+
     .navigation {
         gap: 12px;
     }
@@ -199,38 +342,71 @@
     .navigation a {
         font-size: 13px;
     }
+
+    .lang-toggle-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
 }
 
+
+/* =========================================================
+   RESPONSIVE - 768px
+========================================================= */
+
 @media (max-width: 768px) {
+
     .header-container {
         min-height: 64px;
+
         padding: 10px 16px;
+
         position: relative;
     }
 
+    /* Mobile menu */
+
     .menu-button {
         display: block;
+
         margin-left: auto;
     }
+
+    /* Hide desktop appointment */
 
     .appointment-btn {
         display: none;
     }
 
+    /* Mobile navigation */
+
     .navigation {
         display: none;
+
         position: absolute;
+
         top: 100%;
         left: 0;
+
         width: 100%;
-        background-color: #ffffff;
-        border-top: 1px solid #e5e7eb;
-        border-bottom: 1px solid #dbeafe;
+
+        background-color: #FFFFFF;
+
+        border-top: 1px solid #e0e7ff;
+        border-bottom: 1px solid #dbe4ff;
+
         padding: 16px 20px;
+
         flex-direction: column;
+
         align-items: stretch;
+
         gap: 0;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+
+        box-shadow:
+            0 10px 25px rgba(0, 0, 0, 0.08);
+
+        box-sizing: border-box;
     }
 
     .navigation-open {
@@ -239,38 +415,98 @@
 
     .navigation a {
         width: 100%;
+
         padding: 12px 8px;
+
         font-size: 15px;
-        border-bottom: 1px solid #f1f5f9;
+
+        border-bottom:
+            1px solid #f1f5f9;
+
+        box-sizing: border-box;
     }
 
     .admin-link {
         padding: 12px 8px !important;
     }
 
+    /* Mobile appointment */
+
     .mobile-appointment-btn {
         display: block;
+
         width: 100%;
+
         margin-top: 14px;
+
         padding: 12px;
+
         border: none;
+
         border-radius: 8px;
-        background-color: #0284C7;
-        color: white;
+
+        background-color: #4169E1;
+
+        color: #FFFFFF;
+
         font-size: 15px;
+
         font-weight: 600;
+
         cursor: pointer;
+
+        transition:
+            background-color 0.2s ease;
+    }
+
+    .mobile-appointment-btn:hover {
+        background-color: #3157C7;
+    }
+
+    /* Language button */
+
+    .lang-toggle-btn {
+        padding: 8px 12px;
+
+        font-size: 12px;
     }
 }
 
+
+/* =========================================================
+   RESPONSIVE - 480px
+========================================================= */
+
 @media (max-width: 480px) {
+
     .header-container {
         padding: 8px 12px;
+
+        gap: 10px;
+    }
+
+    .logo {
+        gap: 8px;
     }
 
     .logo-badge {
         width: 36px;
         height: 36px;
+    }
+
+    .logo-cross {
+        width: 18px;
+        height: 18px;
+    }
+
+    .logo-cross-v {
+        width: 5px;
+        height: 18px;
+    }
+
+    .logo-cross-h {
+        width: 18px;
+        height: 5px;
     }
 
     .logo-title {
@@ -280,22 +516,43 @@
     .logo-subtitle {
         font-size: 0.65rem;
     }
+
+    .lang-toggle-btn {
+        padding: 7px 10px;
+
+        font-size: 11px;
+
+        border-radius: 8px;
+    }
+
+    .menu-button {
+        font-size: 25px;
+    }
 }
 
-/* Hide Google Translate Banner Artifacts */
+
+/* =========================================================
+   GOOGLE TRANSLATE ARTIFACTS
+========================================================= */
+
 .goog-te-banner-frame,
 .skiptranslate iframe,
 #goog-gt-tt,
 .goog-tooltip {
     display: none !important;
+
     visibility: hidden !important;
+
     opacity: 0 !important;
+
     height: 0 !important;
+
     width: 0 !important;
+
     pointer-events: none !important;
 }
 
 body {
-    top: 0px !important;
+    top: 0 !important;
     position: static !important;
 }

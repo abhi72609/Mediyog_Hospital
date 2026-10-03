@@ -7,13 +7,24 @@ const API_URL = 'http://127.0.0.1:8000';
 const AdminDashboard = () => {
   const navigate = useNavigate();
 
+  // --------------------------------------------------
+  // ACTIVE TAB
+  // --------------------------------------------------
+
   const [activeTab, setActiveTab] = useState('appointments');
+
+  // --------------------------------------------------
+  // DATA
+  // --------------------------------------------------
 
   const [appointments, setAppointments] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [departments, setDepartments] = useState([]);
 
-  // New Doctor form
+  // --------------------------------------------------
+  // NEW DOCTOR FORM
+  // --------------------------------------------------
+
   const [newDoc, setNewDoc] = useState({
     name: '',
     specialty: '',
@@ -23,7 +34,10 @@ const AdminDashboard = () => {
     image: null
   });
 
-  // New Department form
+  // --------------------------------------------------
+  // NEW DEPARTMENT FORM
+  // --------------------------------------------------
+
   const [newDept, setNewDept] = useState({
     name: '',
     head: '',
@@ -50,6 +64,10 @@ const AdminDashboard = () => {
     try {
       const response = await fetch(`${API_URL}/api/appointments`);
 
+      if (!response.ok) {
+        throw new Error('Failed to fetch appointments');
+      }
+
       const data = await response.json();
 
       setAppointments(data);
@@ -65,6 +83,10 @@ const AdminDashboard = () => {
   const fetchDoctors = async () => {
     try {
       const response = await fetch(`${API_URL}/api/doctors`);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch doctors');
+      }
 
       const data = await response.json();
 
@@ -82,6 +104,10 @@ const AdminDashboard = () => {
     try {
       const response = await fetch(`${API_URL}/api/departments`);
 
+      if (!response.ok) {
+        throw new Error('Failed to fetch departments');
+      }
+
       const data = await response.json();
 
       setDepartments(data);
@@ -97,6 +123,7 @@ const AdminDashboard = () => {
   const handleAddDoctor = async (e) => {
     e.preventDefault();
 
+    // Basic validation
     if (!newDoc.name || !newDoc.specialty) {
       alert('Please enter doctor name and specialty.');
       return;
@@ -108,7 +135,7 @@ const AdminDashboard = () => {
       let imagePath = null;
 
       // ----------------------------------------------
-      // STEP 1: Upload doctor image
+      // STEP 1: UPLOAD DOCTOR IMAGE
       // ----------------------------------------------
 
       if (newDoc.image) {
@@ -125,19 +152,29 @@ const AdminDashboard = () => {
         );
 
         if (!uploadResponse.ok) {
-          throw new Error('Doctor image upload failed');
+          const errorData = await uploadResponse.json().catch(() => null);
+
+          throw new Error(
+            errorData?.detail || 'Doctor image upload failed'
+          );
         }
 
         const uploadData = await uploadResponse.json();
 
         console.log('Image upload response:', uploadData);
 
-        // Backend returns the uploaded image path
+        // Backend returns:
+        // /uploads/doctors/filename.png
+
         imagePath = uploadData.image;
+
+        if (!imagePath) {
+          throw new Error('Image path was not returned by backend');
+        }
       }
 
       // ----------------------------------------------
-      // STEP 2: Save doctor details
+      // STEP 2: SAVE DOCTOR DETAILS
       // ----------------------------------------------
 
       const response = await fetch(`${API_URL}/api/doctors`, {
@@ -159,8 +196,16 @@ const AdminDashboard = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.detail || 'Failed to add doctor');
+        throw new Error(
+          data.detail || 'Failed to add doctor'
+        );
       }
+
+      console.log('Doctor created:', data);
+
+      // ----------------------------------------------
+      // SUCCESS
+      // ----------------------------------------------
 
       alert('Doctor added successfully!');
 
@@ -178,18 +223,28 @@ const AdminDashboard = () => {
       });
 
       // Reset file input
-      const fileInput = document.getElementById('doctor-image-input');
+      const fileInput = document.getElementById(
+        'doctor-image-input'
+      );
 
       if (fileInput) {
         fileInput.value = '';
       }
 
-      // Refresh doctor list
-      fetchDoctors();
+      // ----------------------------------------------
+      // REFRESH DOCTOR LIST
+      // ----------------------------------------------
+
+      await fetchDoctors();
 
     } catch (error) {
       console.error('Error adding doctor:', error);
-      alert(error.message || 'Something went wrong while adding doctor.');
+
+      alert(
+        error.message ||
+        'Something went wrong while adding doctor.'
+      );
+
     } finally {
       setIsAddingDoctor(false);
     }
@@ -203,42 +258,53 @@ const AdminDashboard = () => {
     e.preventDefault();
 
     if (!newDept.name || !newDept.head) {
-      alert('Please enter department name and department head.');
+      alert(
+        'Please enter department name and department head.'
+      );
       return;
     }
 
     try {
-      const response = await fetch(`${API_URL}/api/departments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          departmentName: newDept.name,
-          department_name: newDept.name,
-          departmentHead: newDept.head,
-          department_head: newDept.head,
-          rooms: newDept.rooms,
-          roomNumbers: newDept.rooms
-        })
+      const response = await fetch(
+        `${API_URL}/api/departments`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            departmentName: newDept.name,
+            departmentHead: newDept.head,
+            rooms: newDept.rooms
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.detail || 'Failed to add department'
+        );
+      }
+
+      alert('Department added successfully!');
+
+      setNewDept({
+        name: '',
+        head: '',
+        rooms: ''
       });
 
-      if (response.ok) {
-        alert('Department added successfully!');
-
-        setNewDept({
-          name: '',
-          head: '',
-          rooms: ''
-        });
-
-        fetchDepartments();
-      } else {
-        alert('Failed to add department');
-      }
+      fetchDepartments();
 
     } catch (error) {
       console.error('Error adding department:', error);
+
+      alert(
+        error.message ||
+        'Something went wrong while adding department.'
+      );
     }
   };
 
@@ -247,7 +313,11 @@ const AdminDashboard = () => {
   // --------------------------------------------------
 
   const handleDeleteDoctor = async (id) => {
-    if (!window.confirm('Are you sure you want to remove this doctor?')) {
+    if (
+      !window.confirm(
+        'Are you sure you want to remove this doctor?'
+      )
+    ) {
       return;
     }
 
@@ -259,14 +329,24 @@ const AdminDashboard = () => {
         }
       );
 
+      const data = await response.json().catch(() => null);
+
       if (response.ok) {
+        alert('Doctor removed successfully.');
         fetchDoctors();
       } else {
-        alert('Failed to delete doctor');
+        alert(
+          data?.detail ||
+          'Failed to delete doctor'
+        );
       }
 
     } catch (error) {
       console.error('Error deleting doctor:', error);
+
+      alert(
+        'Something went wrong while deleting doctor.'
+      );
     }
   };
 
@@ -275,7 +355,11 @@ const AdminDashboard = () => {
   // --------------------------------------------------
 
   const handleDeleteDept = async (id) => {
-    if (!window.confirm('Are you sure you want to remove this department?')) {
+    if (
+      !window.confirm(
+        'Are you sure you want to remove this department?'
+      )
+    ) {
       return;
     }
 
@@ -287,14 +371,27 @@ const AdminDashboard = () => {
         }
       );
 
+      const data = await response.json().catch(() => null);
+
       if (response.ok) {
+        alert('Department removed successfully.');
         fetchDepartments();
       } else {
-        alert('Failed to delete department');
+        alert(
+          data?.detail ||
+          'Failed to delete department'
+        );
       }
 
     } catch (error) {
-      console.error('Error deleting department:', error);
+      console.error(
+        'Error deleting department:',
+        error
+      );
+
+      alert(
+        'Something went wrong while deleting department.'
+      );
     }
   };
 
@@ -302,7 +399,10 @@ const AdminDashboard = () => {
   // UPDATE APPOINTMENT STATUS
   // --------------------------------------------------
 
-  const handleStatusChange = async (id, newStatus) => {
+  const handleStatusChange = async (
+    id,
+    newStatus
+  ) => {
     try {
       const response = await fetch(
         `${API_URL}/api/appointments/${id}/status`,
@@ -317,14 +417,26 @@ const AdminDashboard = () => {
         }
       );
 
+      const data = await response.json().catch(() => null);
+
       if (response.ok) {
         fetchAppointments();
       } else {
-        alert('Failed to update status');
+        alert(
+          data?.detail ||
+          'Failed to update status'
+        );
       }
 
     } catch (error) {
-      console.error('Error updating status:', error);
+      console.error(
+        'Error updating status:',
+        error
+      );
+
+      alert(
+        'Something went wrong while updating status.'
+      );
     }
   };
 
@@ -333,7 +445,10 @@ const AdminDashboard = () => {
   // --------------------------------------------------
 
   const handleLogout = () => {
-    localStorage.removeItem('isAdminAuthenticated');
+    localStorage.removeItem(
+      'isAdminAuthenticated'
+    );
+
     navigate('/admin');
   };
 
@@ -359,7 +474,9 @@ const AdminDashboard = () => {
                   ? 'active'
                   : ''
               }
-              onClick={() => setActiveTab('appointments')}
+              onClick={() =>
+                setActiveTab('appointments')
+              }
             >
               Appointments
             </li>
@@ -370,7 +487,9 @@ const AdminDashboard = () => {
                   ? 'active'
                   : ''
               }
-              onClick={() => setActiveTab('doctors')}
+              onClick={() =>
+                setActiveTab('doctors')
+              }
             >
               Doctors
             </li>
@@ -381,7 +500,9 @@ const AdminDashboard = () => {
                   ? 'active'
                   : ''
               }
-              onClick={() => setActiveTab('departments')}
+              onClick={() =>
+                setActiveTab('departments')
+              }
             >
               Departments
             </li>
@@ -397,7 +518,6 @@ const AdminDashboard = () => {
         </button>
 
       </aside>
-
 
       {/* ================= MAIN CONTENT ================= */}
 
@@ -420,7 +540,6 @@ const AdminDashboard = () => {
               <table>
 
                 <thead>
-
                   <tr>
                     <th>Patient Name</th>
                     <th>Age/Gender</th>
@@ -430,7 +549,6 @@ const AdminDashboard = () => {
                     <th>Status</th>
                     <th>Manage Action</th>
                   </tr>
-
                 </thead>
 
                 <tbody>
@@ -445,14 +563,17 @@ const AdminDashboard = () => {
                           {
                             appt.patient_name ||
                             appt.patientName ||
-                            appt.name
+                            appt.name ||
+                            'N/A'
                           }
                         </td>
 
                         <td>
                           {
                             appt.age_gender ||
-                            `${appt.age || ''} / ${appt.gender || ''}`
+                            `${appt.age || ''} / ${
+                              appt.gender || ''
+                            }`
                           }
                         </td>
 
@@ -463,7 +584,8 @@ const AdminDashboard = () => {
                         <td>
                           {
                             appt.department ||
-                            appt.dept
+                            appt.dept ||
+                            'N/A'
                           }
                         </td>
 
@@ -475,7 +597,10 @@ const AdminDashboard = () => {
 
                           <span
                             className={`status ${
-                              (appt.status || 'Pending').toLowerCase()
+                              (
+                                appt.status ||
+                                'Pending'
+                              ).toLowerCase()
                             }`}
                           >
                             {appt.status || 'Pending'}
@@ -486,7 +611,10 @@ const AdminDashboard = () => {
                         <td>
 
                           <select
-                            value={appt.status || 'Pending'}
+                            value={
+                              appt.status ||
+                              'Pending'
+                            }
                             onChange={(e) =>
                               handleStatusChange(
                                 appt.id,
@@ -496,10 +624,12 @@ const AdminDashboard = () => {
                             style={{
                               padding: '6px 10px',
                               borderRadius: '6px',
-                              border: '1px solid #ccc',
+                              border:
+                                '1px solid #ccc',
                               cursor: 'pointer',
                               fontWeight: '500',
-                              backgroundColor: '#f9f9f9'
+                              backgroundColor:
+                                '#f9f9f9'
                             }}
                           >
 
@@ -550,7 +680,6 @@ const AdminDashboard = () => {
 
         )}
 
-
         {/* =====================================================
             DOCTORS
         ===================================================== */}
@@ -563,13 +692,14 @@ const AdminDashboard = () => {
               <h1>Manage Doctors</h1>
             </header>
 
-
             {/* ================= ADD DOCTOR FORM ================= */}
 
             <form
               onSubmit={handleAddDoctor}
               className="admin-inline-form"
             >
+
+              {/* DOCTOR NAME */}
 
               <input
                 type="text"
@@ -584,6 +714,7 @@ const AdminDashboard = () => {
                 required
               />
 
+              {/* SPECIALTY */}
 
               <input
                 type="text"
@@ -598,6 +729,7 @@ const AdminDashboard = () => {
                 required
               />
 
+              {/* EXPERIENCE */}
 
               <input
                 type="text"
@@ -612,6 +744,7 @@ const AdminDashboard = () => {
                 required
               />
 
+              {/* OPERATIONS */}
 
               <input
                 type="text"
@@ -625,6 +758,7 @@ const AdminDashboard = () => {
                 }
               />
 
+              {/* PHONE */}
 
               <input
                 type="text"
@@ -639,7 +773,6 @@ const AdminDashboard = () => {
                 required
               />
 
-
               {/* DOCTOR IMAGE */}
 
               <input
@@ -649,11 +782,16 @@ const AdminDashboard = () => {
                 onChange={(e) =>
                   setNewDoc({
                     ...newDoc,
-                    image: e.target.files[0]
+                    image:
+                      e.target.files &&
+                      e.target.files[0]
+                        ? e.target.files[0]
+                        : null
                   })
                 }
               />
 
+              {/* ADD DOCTOR BUTTON */}
 
               <button
                 type="submit"
@@ -667,7 +805,6 @@ const AdminDashboard = () => {
 
             </form>
 
-
             {/* ================= DOCTOR TABLE ================= */}
 
             <div className="table-container">
@@ -679,23 +816,16 @@ const AdminDashboard = () => {
                   <tr>
 
                     <th>Photo</th>
-
                     <th>Doctor Name</th>
-
                     <th>Specialty</th>
-
                     <th>Experience</th>
-
                     <th>Operations</th>
-
                     <th>Phone</th>
-
                     <th>Action</th>
 
                   </tr>
 
                 </thead>
-
 
                 <tbody>
 
@@ -713,62 +843,87 @@ const AdminDashboard = () => {
 
                             <img
                               src={
-                                doc.image.startsWith('http')
+                                doc.image.startsWith(
+                                  'http'
+                                )
                                   ? doc.image
                                   : `${API_URL}${doc.image}`
                               }
-                              alt={doc.doctor_name || 'Doctor'}
+                              alt={
+                                doc.doctor_name ||
+                                doc.name ||
+                                'Doctor'
+                              }
                               style={{
                                 width: '60px',
                                 height: '60px',
                                 objectFit: 'cover',
                                 borderRadius: '8px'
                               }}
+                              onError={(e) => {
+                                e.currentTarget.style.display =
+                                  'none';
+                              }}
                             />
 
                           ) : (
 
-                            <span>No Image</span>
+                            <span>
+                              No Image
+                            </span>
 
                           )}
 
                         </td>
 
+                        {/* DOCTOR NAME */}
 
                         <td>
                           {
                             doc.doctor_name ||
-                            doc.name
+                            doc.name ||
+                            'N/A'
                           }
                         </td>
 
+                        {/* SPECIALTY */}
 
                         <td>
                           {doc.specialty}
                         </td>
 
+                        {/* EXPERIENCE */}
 
                         <td>
                           {doc.experience}
                         </td>
 
+                        {/* OPERATIONS */}
 
                         <td>
-                          {doc.operations || 'Not specified'}
+                          {
+                            doc.operations ||
+                            'Not specified'
+                          }
                         </td>
 
+                        {/* PHONE */}
 
                         <td>
                           {doc.phone}
                         </td>
 
+                        {/* DELETE */}
 
                         <td>
 
                           <button
+                            type="button"
                             className="delete-btn"
                             onClick={() =>
-                              handleDeleteDoctor(doc.id)
+                              handleDeleteDoctor(
+                                doc.id
+                              )
                             }
                           >
                             Remove
@@ -807,7 +962,6 @@ const AdminDashboard = () => {
 
         )}
 
-
         {/* =====================================================
             DEPARTMENTS
         ===================================================== */}
@@ -819,7 +973,6 @@ const AdminDashboard = () => {
             <header className="content-header">
               <h1>Manage Departments</h1>
             </header>
-
 
             {/* ================= ADD DEPARTMENT ================= */}
 
@@ -841,7 +994,6 @@ const AdminDashboard = () => {
                 required
               />
 
-
               <input
                 type="text"
                 placeholder="Department Head"
@@ -854,7 +1006,6 @@ const AdminDashboard = () => {
                 }
                 required
               />
-
 
               <input
                 type="text"
@@ -869,7 +1020,6 @@ const AdminDashboard = () => {
                 required
               />
 
-
               <button
                 type="submit"
                 className="add-btn"
@@ -878,7 +1028,6 @@ const AdminDashboard = () => {
               </button>
 
             </form>
-
 
             {/* ================= DEPARTMENT TABLE ================= */}
 
@@ -891,17 +1040,13 @@ const AdminDashboard = () => {
                   <tr>
 
                     <th>Department Name</th>
-
                     <th>Head of Dept</th>
-
                     <th>Rooms</th>
-
                     <th>Action</th>
 
                   </tr>
 
                 </thead>
-
 
                 <tbody>
 
@@ -915,35 +1060,38 @@ const AdminDashboard = () => {
                           {
                             dept.department_name ||
                             dept.departmentName ||
-                            dept.name
+                            dept.name ||
+                            'N/A'
                           }
                         </td>
-
 
                         <td>
                           {
                             dept.department_head ||
                             dept.departmentHead ||
-                            dept.head
+                            dept.head ||
+                            'N/A'
                           }
                         </td>
-
 
                         <td>
                           {
                             dept.room_numbers ||
                             dept.rooms ||
-                            dept.roomNumbers
+                            dept.roomNumbers ||
+                            'N/A'
                           }
                         </td>
-
 
                         <td>
 
                           <button
+                            type="button"
                             className="delete-btn"
                             onClick={() =>
-                              handleDeleteDept(dept.id)
+                              handleDeleteDept(
+                                dept.id
+                              )
                             }
                           >
                             Remove
