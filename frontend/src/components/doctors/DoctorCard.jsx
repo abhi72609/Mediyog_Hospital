@@ -1,31 +1,74 @@
-export default function DoctorCard({ doctor, onBookAppointment }) {
-  return (
-    <div className="doctor-card">
+export default function DoctorCard({
+    doctor,
+    onBookAppointment
+}) {
+    const cleanValue = (value, label) => {
+        if (!value) {
+            return "Not specified";
+        }
 
-      <img
-        src={doctor.image}
-        alt={doctor.name}
-      />
+        const text = String(value).trim();
 
-      <div className="doctor-info">
+        const regex = new RegExp(
+            `^${label}\\s*[-:]\\s*`,
+            "i"
+        );
 
-        <h3>{doctor.name}</h3>
+        return text.replace(regex, "").trim();
+    };
 
-        <p>{doctor.specialization}</p>
+    const specialty = cleanValue(
+        doctor.specialization,
+        "specialty"
+    );
 
-        <p>{doctor.experience}</p>
+    const experience = cleanValue(
+        doctor.experience,
+        "experience"
+    );
 
-        <p>{doctor.operations}</p>
+    const operations = cleanValue(
+        doctor.operations,
+        "operations"
+    );
 
-        <button
-          className="book-doctor-btn"
-          onClick={() => onBookAppointment(doctor)}
-        >
-          Book Appointment
-        </button>
+    return (
+        <div className="doctor-card">
 
-      </div>
+            <img
+                src={doctor.image}
+                alt={doctor.name}
+            />
 
-    </div>
-  );
+            <div className="doctor-info">
+
+                <h3>
+                    {doctor.name}
+                </h3>
+
+                <p>
+                    Specialty - {specialty}
+                </p>
+
+                <p>
+                    Experience - {experience}
+                </p>
+
+                <p>
+                    Operations - {operations}
+                </p>
+
+                <button
+                    className="book-doctor-btn"
+                    onClick={() =>
+                        onBookAppointment(doctor)
+                    }
+                >
+                    Book Appointment
+                </button>
+
+            </div>
+
+        </div>
+    );
 }
