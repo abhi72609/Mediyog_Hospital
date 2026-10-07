@@ -2,45 +2,78 @@ import React, { useRef } from 'react';
 import emailjs from '@emailjs/browser';
 import './AppointmentModal.css';
 
+//const API_URL = 'http://127.0.0.1:8000';
+
+import { API_URL } from '../../Config.js';
+
 const AppointmentModal = ({ isOpen, onClose, doctor }) => {
   const form = useRef();
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    emailjs.sendForm(
-      'service_wsb5wzm',
-      'template_8qk6cuo',
-      form.current,
-      'MI042Pr1CBZZqEM8o'
-    )
-      .then((result) => {
-        alert(
-          "Appointment requested! The hospital staff will call you shortly."
-        );
 
-        onClose();
+    // 1. Get form data to send to FastAPI backend
+    const formDataObj = new FormData(form.current);
+    const patientName = formDataObj.get('patient_name');
+    const age = formDataObj.get('age');
+    const gender = formDataObj.get('gender');
+    const phone = formDataObj.get('patient_phone');
+    const date = formDataObj.get('preferred_date');
+    const department = formDataObj.get('department');
 
-      }, (error) => {
-
-        alert(
-          "Something went wrong. Please try calling the hospital directly."
-        );
-
-        console.log(error.text);
+    try {
+      // 2. Save appointment to FastAPI database first
+      const backendResponse = await fetch(`${API_URL}/api/appointments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          patientName: patientName,
+          name: patientName,
+          ageGender: `${age} / ${gender}`,
+          phone: phone,
+          department: department,
+          date: date,
+          status: 'Pending'
+        }),
       });
+
+      if (!backendResponse.ok) {
+        throw new Error('Failed to save appointment to backend database.');
+      }
+
+      // 3. Send email notification via EmailJS
+      await emailjs.sendForm(
+        'service_wsb5wzm',
+        'template_8qk6cuo',
+        form.current,
+        'MI042Pr1CBZZqEM8o'
+      );
+
+      alert(
+        "Appointment requested successfully! It has been recorded in the admin dashboard and staff will call you shortly."
+      );
+
+      onClose();
+
+    } catch (error) {
+      console.error(error);
+      alert(
+        "Something went wrong while booking. Please try calling the hospital directly."
+      );
+    }
   };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-
       <div
         className="modal-content"
         onClick={(e) => e.stopPropagation()}
       >
-
         <button
           className="close-btn"
           onClick={onClose}
@@ -56,9 +89,7 @@ const AppointmentModal = ({ isOpen, onClose, doctor }) => {
             <p>
               Appointment with
             </p>
-
             <h3>{doctor.name}</h3>
-
             <span>{doctor.specialization}</span>
           </div>
         )}
@@ -72,7 +103,6 @@ const AppointmentModal = ({ isOpen, onClose, doctor }) => {
           onSubmit={handleSubmit}
           className="modal-form"
         >
-
           {/* Doctor information sent to EmailJS */}
           <input
             type="hidden"
@@ -88,16 +118,13 @@ const AppointmentModal = ({ isOpen, onClose, doctor }) => {
 
           {/* Patient Name */}
           <div className="form-group">
-
             <input
               type="text"
               name="patient_name"
               placeholder="Patient Full Name"
               required
             />
-
           </div>
-
 
           {/* Age + Gender */}
           <div
@@ -107,7 +134,6 @@ const AppointmentModal = ({ isOpen, onClose, doctor }) => {
               gap: '10px'
             }}
           >
-
             <input
               type="number"
               name="age"
@@ -124,31 +150,23 @@ const AppointmentModal = ({ isOpen, onClose, doctor }) => {
               defaultValue=""
               style={{ flex: 1 }}
             >
-
               <option value="" disabled>
                 Gender...
               </option>
-
               <option value="Male">
                 Male
               </option>
-
               <option value="Female">
                 Female
               </option>
-
               <option value="Other">
                 Other
               </option>
-
             </select>
-
           </div>
-
 
           {/* Phone */}
           <div className="form-group">
-
             <input
               type="tel"
               name="patient_phone"
@@ -156,101 +174,52 @@ const AppointmentModal = ({ isOpen, onClose, doctor }) => {
               required
               pattern="[0-9]{10}"
             />
-
           </div>
-
 
           {/* Date */}
           <div className="form-group">
-
             <input
               type="date"
               name="preferred_date"
               required
               title="Preferred Appointment Date"
             />
-
           </div>
-
 
           {/* Department */}
           <div className="form-group">
-
             <select
               name="department"
               required
               defaultValue=""
             >
-
               <option value="" disabled>
                 Select Department...
               </option>
-
-              <option value="General Surgery">
-                General Surgery
-              </option>
-
-              <option value="Orthopedic Surgery">
-                Orthopedic Surgery
-              </option>
-
-              <option value="Urological Surgery">
-                Urological Surgery
-              </option>
-
-              <option value="Eye & Dental Surgery">
-                Eye & Dental Surgery
-              </option>
-
-              <option value="Cosmetic Surgery">
-                Cosmetic Surgery
-              </option>
-
-              <option value="Spinal Surgery">
-                Spinal Surgery
-              </option>
-
-              <option value="Medicine">
-                Medicine
-              </option>
-
-              <option value="Gynecology">
-                Gynecology
-              </option>
-
-              <option value="Nephrology">
-                Nephrology
-              </option>
-
-              <option value="General Medicine">
-                General Medicine
-              </option>
-
-              <option value="Gastroenterology">
-                Gastroenterology
-              </option>
-
-              <option value="Cardiology">
-                Cardiology
-              </option>
-
+              <option value="General Surgery">General Surgery</option>
+              <option value="Orthopedic Surgery">Orthopedic Surgery</option>
+              <option value="Urological Surgery">Urological Surgery</option>
+              <option value="Eye & Dental Surgery">Eye & Dental Surgery</option>
+              <option value="Cosmetic Surgery">Cosmetic Surgery</option>
+              <option value="Spinal Surgery">Spinal Surgery</option>
+              <option value="Medicine">Medicine</option>
+              <option value="Gynecology">Gynecology</option>
+              <option value="Nephrology">Nephrology</option>
+              <option value="General Medicine">General Medicine</option>
+              <option value="Gastroenterology">Gastroenterology</option>
+              <option value="Cardiology">Cardiology</option>
             </select>
-
           </div>
-
 
           {/* Symptoms */}
           <div className="form-group">
-
             <textarea
               name="symptoms"
               placeholder="Briefly describe your symptoms"
               rows="3"
               required
             ></textarea>
-
           </div>
-
 
           {/* Submit */}
           <button
@@ -259,11 +228,8 @@ const AppointmentModal = ({ isOpen, onClose, doctor }) => {
           >
             Submit Request
           </button>
-
         </form>
-
       </div>
-
     </div>
   );
 };

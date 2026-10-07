@@ -1,5 +1,6 @@
 import React from "react";
 import "./Footer.css";
+import { Link } from 'react-router-dom';
 import {
     FaFacebookF,
     FaTwitter,
@@ -90,16 +91,7 @@ const Footer = ({ onBookAppointment }) => {
 
                         {/* BOOK APPOINTMENT */}
 
-                        <li>
-                            <button
-                                type="button"
-                                className="footer-book-appointment"
-                                onClick={onBookAppointment}
-                            >
-                                Book Appointment
-                            </button>
-                        </li>
-
+                    
                     </ul>
 
                 </div>
@@ -163,7 +155,7 @@ const Footer = ({ onBookAppointment }) => {
 
                 <p>
                     © Mediyog Hospital All Rights Reserved by
-                    Mediyog Hospital | Created &amp; Managed by YourTeam
+                    Mediyog Hospital | Created &amp; Managed by Abhisek &Teams 
                 </p>
 
             </div>

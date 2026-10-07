@@ -38,6 +38,11 @@ const AdminLogin = () => {
 
       if (response.ok && data.success) {
         localStorage.setItem('isAdminAuthenticated', 'true');
+        
+        // Set session expiry to exactly 10 minutes from now
+        const TEN_MINUTES = 10 * 60 * 1000;
+        localStorage.setItem('sessionExpiry', (Date.now() + TEN_MINUTES).toString());
+        
         navigate('/admin/dashboard');
       } else {
         setError(data.detail || 'Invalid email or password');

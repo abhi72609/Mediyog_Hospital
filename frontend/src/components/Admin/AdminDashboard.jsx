@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
 
-const API_URL = 'http://127.0.0.1:8000';
+//const API_URL = 'http://127.0.0.1:8000';
+
+//const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://127.0.0.1:8000';
+
+
+import { API_URL } from '../../Config.js';
+
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -123,7 +129,6 @@ const AdminDashboard = () => {
   const handleAddDoctor = async (e) => {
     e.preventDefault();
 
-    // Basic validation
     if (!newDoc.name || !newDoc.specialty) {
       alert('Please enter doctor name and specialty.');
       return;
@@ -133,10 +138,6 @@ const AdminDashboard = () => {
       setIsAddingDoctor(true);
 
       let imagePath = null;
-
-      // ----------------------------------------------
-      // STEP 1: UPLOAD DOCTOR IMAGE
-      // ----------------------------------------------
 
       if (newDoc.image) {
         const imageFormData = new FormData();
@@ -160,22 +161,12 @@ const AdminDashboard = () => {
         }
 
         const uploadData = await uploadResponse.json();
-
-        console.log('Image upload response:', uploadData);
-
-        // Backend returns:
-        // /uploads/doctors/filename.png
-
         imagePath = uploadData.image;
 
         if (!imagePath) {
           throw new Error('Image path was not returned by backend');
         }
       }
-
-      // ----------------------------------------------
-      // STEP 2: SAVE DOCTOR DETAILS
-      // ----------------------------------------------
 
       const response = await fetch(`${API_URL}/api/doctors`, {
         method: 'POST',
@@ -201,17 +192,7 @@ const AdminDashboard = () => {
         );
       }
 
-      console.log('Doctor created:', data);
-
-      // ----------------------------------------------
-      // SUCCESS
-      // ----------------------------------------------
-
       alert('Doctor added successfully!');
-
-      // ----------------------------------------------
-      // RESET FORM
-      // ----------------------------------------------
 
       setNewDoc({
         name: '',
@@ -222,7 +203,6 @@ const AdminDashboard = () => {
         image: null
       });
 
-      // Reset file input
       const fileInput = document.getElementById(
         'doctor-image-input'
       );
@@ -231,20 +211,11 @@ const AdminDashboard = () => {
         fileInput.value = '';
       }
 
-      // ----------------------------------------------
-      // REFRESH DOCTOR LIST
-      // ----------------------------------------------
-
       await fetchDoctors();
 
     } catch (error) {
       console.error('Error adding doctor:', error);
-
-      alert(
-        error.message ||
-        'Something went wrong while adding doctor.'
-      );
-
+      alert(error.message || 'Something went wrong while adding doctor.');
     } finally {
       setIsAddingDoctor(false);
     }
@@ -258,9 +229,7 @@ const AdminDashboard = () => {
     e.preventDefault();
 
     if (!newDept.name || !newDept.head) {
-      alert(
-        'Please enter department name and department head.'
-      );
+      alert('Please enter department name and department head.');
       return;
     }
 
@@ -300,11 +269,7 @@ const AdminDashboard = () => {
 
     } catch (error) {
       console.error('Error adding department:', error);
-
-      alert(
-        error.message ||
-        'Something went wrong while adding department.'
-      );
+      alert(error.message || 'Something went wrong while adding department.');
     }
   };
 
@@ -313,11 +278,7 @@ const AdminDashboard = () => {
   // --------------------------------------------------
 
   const handleDeleteDoctor = async (id) => {
-    if (
-      !window.confirm(
-        'Are you sure you want to remove this doctor?'
-      )
-    ) {
+    if (!window.confirm('Are you sure you want to remove this doctor?')) {
       return;
     }
 
@@ -335,18 +296,11 @@ const AdminDashboard = () => {
         alert('Doctor removed successfully.');
         fetchDoctors();
       } else {
-        alert(
-          data?.detail ||
-          'Failed to delete doctor'
-        );
+        alert(data?.detail || 'Failed to delete doctor');
       }
-
     } catch (error) {
       console.error('Error deleting doctor:', error);
-
-      alert(
-        'Something went wrong while deleting doctor.'
-      );
+      alert('Something went wrong while deleting doctor.');
     }
   };
 
@@ -355,11 +309,7 @@ const AdminDashboard = () => {
   // --------------------------------------------------
 
   const handleDeleteDept = async (id) => {
-    if (
-      !window.confirm(
-        'Are you sure you want to remove this department?'
-      )
-    ) {
+    if (!window.confirm('Are you sure you want to remove this department?')) {
       return;
     }
 
@@ -377,21 +327,42 @@ const AdminDashboard = () => {
         alert('Department removed successfully.');
         fetchDepartments();
       } else {
-        alert(
-          data?.detail ||
-          'Failed to delete department'
-        );
+        alert(data?.detail || 'Failed to delete department');
       }
-
     } catch (error) {
-      console.error(
-        'Error deleting department:',
-        error
+      console.error('Error deleting department:', error);
+      alert('Something went wrong while deleting department.');
+    }
+  };
+
+  // --------------------------------------------------
+  // DELETE APPOINTMENT
+  // --------------------------------------------------
+
+  const handleDeleteAppointment = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this appointment?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/appointments/${id}`,
+        {
+          method: 'DELETE'
+        }
       );
 
-      alert(
-        'Something went wrong while deleting department.'
-      );
+      const data = await response.json().catch(() => null);
+
+      if (response.ok) {
+        alert('Appointment deleted successfully.');
+        fetchAppointments();
+      } else {
+        alert(data?.detail || 'Failed to delete appointment');
+      }
+    } catch (error) {
+      console.error('Error deleting appointment:', error);
+      alert('Something went wrong while deleting appointment.');
     }
   };
 
@@ -399,10 +370,7 @@ const AdminDashboard = () => {
   // UPDATE APPOINTMENT STATUS
   // --------------------------------------------------
 
-  const handleStatusChange = async (
-    id,
-    newStatus
-  ) => {
+  const handleStatusChange = async (id, newStatus) => {
     try {
       const response = await fetch(
         `${API_URL}/api/appointments/${id}/status`,
@@ -422,21 +390,11 @@ const AdminDashboard = () => {
       if (response.ok) {
         fetchAppointments();
       } else {
-        alert(
-          data?.detail ||
-          'Failed to update status'
-        );
+        alert(data?.detail || 'Failed to update status');
       }
-
     } catch (error) {
-      console.error(
-        'Error updating status:',
-        error
-      );
-
-      alert(
-        'Something went wrong while updating status.'
-      );
+      console.error('Error updating status:', error);
+      alert('Something went wrong while updating status.');
     }
   };
 
@@ -445,10 +403,8 @@ const AdminDashboard = () => {
   // --------------------------------------------------
 
   const handleLogout = () => {
-    localStorage.removeItem(
-      'isAdminAuthenticated'
-    );
-
+    localStorage.removeItem('isAdminAuthenticated');
+    localStorage.removeItem('sessionExpiry');
     navigate('/admin');
   };
 
@@ -460,85 +416,54 @@ const AdminDashboard = () => {
     <div className="admin-dashboard-container">
 
       {/* ================= SIDEBAR ================= */}
-
       <aside className="sidebar">
-
         <h2>Mediyog Admin</h2>
-
         <nav>
           <ul>
-
             <li
-              className={
-                activeTab === 'appointments'
-                  ? 'active'
-                  : ''
-              }
-              onClick={() =>
-                setActiveTab('appointments')
-              }
+              className={activeTab === 'appointments' ? 'active' : ''}
+              onClick={() => setActiveTab('appointments')}
             >
               Appointments
             </li>
-
             <li
-              className={
-                activeTab === 'doctors'
-                  ? 'active'
-                  : ''
-              }
-              onClick={() =>
-                setActiveTab('doctors')
-              }
+              className={activeTab === 'doctors' ? 'active' : ''}
+              onClick={() => setActiveTab('doctors')}
             >
               Doctors
             </li>
-
             <li
-              className={
-                activeTab === 'departments'
-                  ? 'active'
-                  : ''
-              }
-              onClick={() =>
-                setActiveTab('departments')
-              }
+              className={activeTab === 'departments' ? 'active' : ''}
+              onClick={() => setActiveTab('departments')}
             >
               Departments
             </li>
-
           </ul>
         </nav>
-
-        <button
-          className="logout-btn"
-          onClick={handleLogout}
-        >
+        <button className="logout-btn" onClick={handleLogout}>
           Log Out
         </button>
-
       </aside>
 
       {/* ================= MAIN CONTENT ================= */}
-
       <main className="dashboard-content">
 
-        {/* =====================================================
-            APPOINTMENTS
-        ===================================================== */}
-
+        {/* ================= APPOINTMENTS ================= */}
         {activeTab === 'appointments' && (
-
           <div>
-
-            <header className="content-header">
+            <header className="content-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h1>Recent Patient Appointments</h1>
+              <button 
+                onClick={fetchAppointments} 
+                className="add-btn" 
+                style={{ padding: '8px 16px', fontSize: '14px', cursor: 'pointer' }}
+              >
+                🔄 Refresh List
+              </button>
             </header>
 
             <div className="table-container">
-
               <table>
-
                 <thead>
                   <tr>
                     <th>Patient Name</th>
@@ -550,231 +475,106 @@ const AdminDashboard = () => {
                     <th>Manage Action</th>
                   </tr>
                 </thead>
-
                 <tbody>
-
                   {appointments.length > 0 ? (
-
                     appointments.map((appt) => (
-
                       <tr key={appt.id}>
-
+                        <td>{appt.patient_name || appt.patientName || appt.name || 'N/A'}</td>
+                        <td>{appt.age_gender || `${appt.age || ''} / ${appt.gender || ''}`}</td>
+                        <td>{appt.phone}</td>
+                        <td>{appt.department || appt.dept || 'N/A'}</td>
+                        <td>{appt.date}</td>
                         <td>
-                          {
-                            appt.patient_name ||
-                            appt.patientName ||
-                            appt.name ||
-                            'N/A'
-                          }
-                        </td>
-
-                        <td>
-                          {
-                            appt.age_gender ||
-                            `${appt.age || ''} / ${
-                              appt.gender || ''
-                            }`
-                          }
-                        </td>
-
-                        <td>
-                          {appt.phone}
-                        </td>
-
-                        <td>
-                          {
-                            appt.department ||
-                            appt.dept ||
-                            'N/A'
-                          }
-                        </td>
-
-                        <td>
-                          {appt.date}
-                        </td>
-
-                        <td>
-
-                          <span
-                            className={`status ${
-                              (
-                                appt.status ||
-                                'Pending'
-                              ).toLowerCase()
-                            }`}
-                          >
+                          <span className={`status ${(appt.status || 'Pending').toLowerCase()}`}>
                             {appt.status || 'Pending'}
                           </span>
-
                         </td>
-
                         <td>
+                          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                            <select
+                              value={appt.status || 'Pending'}
+                              onChange={(e) => handleStatusChange(appt.id, e.target.value)}
+                              style={{
+                                padding: '6px 10px',
+                                borderRadius: '6px',
+                                border: '1px solid #ccc',
+                                cursor: 'pointer',
+                                fontWeight: '500',
+                                backgroundColor: '#f9f9f9'
+                              }}
+                            >
+                              <option value="Pending">Pending</option>
+                              <option value="Confirmed">Confirmed</option>
+                              <option value="Completed">Completed</option>
+                            </select>
 
-                          <select
-                            value={
-                              appt.status ||
-                              'Pending'
-                            }
-                            onChange={(e) =>
-                              handleStatusChange(
-                                appt.id,
-                                e.target.value
-                              )
-                            }
-                            style={{
-                              padding: '6px 10px',
-                              borderRadius: '6px',
-                              border:
-                                '1px solid #ccc',
-                              cursor: 'pointer',
-                              fontWeight: '500',
-                              backgroundColor:
-                                '#f9f9f9'
-                            }}
-                          >
-
-                            <option value="Pending">
-                              Pending
-                            </option>
-
-                            <option value="Confirmed">
-                              Confirmed
-                            </option>
-
-                            <option value="Completed">
-                              Completed
-                            </option>
-
-                          </select>
-
+                            <button
+                              type="button"
+                              className="delete-btn"
+                              onClick={() => handleDeleteAppointment(appt.id)}
+                              style={{ padding: '6px 10px', fontSize: '12px', cursor: 'pointer' }}
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </td>
-
                       </tr>
-
                     ))
-
                   ) : (
-
                     <tr>
-
-                      <td
-                        colSpan="7"
-                        style={{
-                          textAlign: 'center'
-                        }}
-                      >
+                      <td colSpan="7" style={{ textAlign: 'center' }}>
                         No appointments found.
                       </td>
-
                     </tr>
-
                   )}
-
                 </tbody>
-
               </table>
-
             </div>
-
           </div>
-
         )}
 
-        {/* =====================================================
-            DOCTORS
-        ===================================================== */}
-
+        {/* ================= DOCTORS ================= */}
         {activeTab === 'doctors' && (
-
           <div>
-
             <header className="content-header">
               <h1>Manage Doctors</h1>
             </header>
 
-            {/* ================= ADD DOCTOR FORM ================= */}
-
-            <form
-              onSubmit={handleAddDoctor}
-              className="admin-inline-form"
-            >
-
-              {/* DOCTOR NAME */}
-
+            <form onSubmit={handleAddDoctor} className="admin-inline-form">
               <input
                 type="text"
                 placeholder="Doctor Name"
                 value={newDoc.name}
-                onChange={(e) =>
-                  setNewDoc({
-                    ...newDoc,
-                    name: e.target.value
-                  })
-                }
+                onChange={(e) => setNewDoc({ ...newDoc, name: e.target.value })}
                 required
               />
-
-              {/* SPECIALTY */}
-
               <input
                 type="text"
                 placeholder="Specialty"
                 value={newDoc.specialty}
-                onChange={(e) =>
-                  setNewDoc({
-                    ...newDoc,
-                    specialty: e.target.value
-                  })
-                }
+                onChange={(e) => setNewDoc({ ...newDoc, specialty: e.target.value })}
                 required
               />
-
-              {/* EXPERIENCE */}
-
               <input
                 type="text"
                 placeholder="Experience"
                 value={newDoc.experience}
-                onChange={(e) =>
-                  setNewDoc({
-                    ...newDoc,
-                    experience: e.target.value
-                  })
-                }
+                onChange={(e) => setNewDoc({ ...newDoc, experience: e.target.value })}
                 required
               />
-
-              {/* OPERATIONS */}
-
               <input
                 type="text"
                 placeholder="Operations"
                 value={newDoc.operations}
-                onChange={(e) =>
-                  setNewDoc({
-                    ...newDoc,
-                    operations: e.target.value
-                  })
-                }
+                onChange={(e) => setNewDoc({ ...newDoc, operations: e.target.value })}
               />
-
-              {/* PHONE */}
-
               <input
                 type="text"
                 placeholder="Phone"
                 value={newDoc.phone}
-                onChange={(e) =>
-                  setNewDoc({
-                    ...newDoc,
-                    phone: e.target.value
-                  })
-                }
+                onChange={(e) => setNewDoc({ ...newDoc, phone: e.target.value })}
                 required
               />
-
-              {/* DOCTOR IMAGE */}
-
               <input
                 id="doctor-image-input"
                 type="file"
@@ -782,39 +582,19 @@ const AdminDashboard = () => {
                 onChange={(e) =>
                   setNewDoc({
                     ...newDoc,
-                    image:
-                      e.target.files &&
-                      e.target.files[0]
-                        ? e.target.files[0]
-                        : null
+                    image: e.target.files && e.target.files[0] ? e.target.files[0] : null
                   })
                 }
               />
-
-              {/* ADD DOCTOR BUTTON */}
-
-              <button
-                type="submit"
-                className="add-btn"
-                disabled={isAddingDoctor}
-              >
-                {isAddingDoctor
-                  ? 'Adding Doctor...'
-                  : '+ Add Doctor'}
+              <button type="submit" className="add-btn" disabled={isAddingDoctor}>
+                {isAddingDoctor ? 'Adding Doctor...' : '+ Add Doctor'}
               </button>
-
             </form>
 
-            {/* ================= DOCTOR TABLE ================= */}
-
             <div className="table-container">
-
               <table>
-
                 <thead>
-
                   <tr>
-
                     <th>Photo</th>
                     <th>Doctor Name</th>
                     <th>Specialty</th>
@@ -822,316 +602,129 @@ const AdminDashboard = () => {
                     <th>Operations</th>
                     <th>Phone</th>
                     <th>Action</th>
-
                   </tr>
-
                 </thead>
-
                 <tbody>
-
                   {doctors.length > 0 ? (
-
                     doctors.map((doc) => (
-
                       <tr key={doc.id}>
-
-                        {/* DOCTOR IMAGE */}
-
                         <td>
-
                           {doc.image ? (
-
                             <img
-                              src={
-                                doc.image.startsWith(
-                                  'http'
-                                )
-                                  ? doc.image
-                                  : `${API_URL}${doc.image}`
-                              }
-                              alt={
-                                doc.doctor_name ||
-                                doc.name ||
-                                'Doctor'
-                              }
-                              style={{
-                                width: '60px',
-                                height: '60px',
-                                objectFit: 'cover',
-                                borderRadius: '8px'
-                              }}
-                              onError={(e) => {
-                                e.currentTarget.style.display =
-                                  'none';
-                              }}
+                              src={doc.image.startsWith('http') ? doc.image : `${API_URL}${doc.image}`}
+                              alt={doc.doctor_name || doc.name || 'Doctor'}
+                              style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }}
+                              onError={(e) => { e.currentTarget.style.display = 'none'; }}
                             />
-
                           ) : (
-
-                            <span>
-                              No Image
-                            </span>
-
+                            <span>No Image</span>
                           )}
-
                         </td>
-
-                        {/* DOCTOR NAME */}
-
+                        <td>{doc.doctor_name || doc.name || 'N/A'}</td>
+                        <td>{doc.specialty}</td>
+                        <td>{doc.experience}</td>
+                        <td>{doc.operations || 'Not specified'}</td>
+                        <td>{doc.phone}</td>
                         <td>
-                          {
-                            doc.doctor_name ||
-                            doc.name ||
-                            'N/A'
-                          }
-                        </td>
-
-                        {/* SPECIALTY */}
-
-                        <td>
-                          {doc.specialty}
-                        </td>
-
-                        {/* EXPERIENCE */}
-
-                        <td>
-                          {doc.experience}
-                        </td>
-
-                        {/* OPERATIONS */}
-
-                        <td>
-                          {
-                            doc.operations ||
-                            'Not specified'
-                          }
-                        </td>
-
-                        {/* PHONE */}
-
-                        <td>
-                          {doc.phone}
-                        </td>
-
-                        {/* DELETE */}
-
-                        <td>
-
                           <button
                             type="button"
                             className="delete-btn"
-                            onClick={() =>
-                              handleDeleteDoctor(
-                                doc.id
-                              )
-                            }
+                            onClick={() => handleDeleteDoctor(doc.id)}
                           >
                             Remove
                           </button>
-
                         </td>
-
                       </tr>
-
                     ))
-
                   ) : (
-
                     <tr>
-
-                      <td
-                        colSpan="7"
-                        style={{
-                          textAlign: 'center'
-                        }}
-                      >
+                      <td colSpan="7" style={{ textAlign: 'center' }}>
                         No doctors added yet.
                       </td>
-
                     </tr>
-
                   )}
-
                 </tbody>
-
               </table>
-
             </div>
-
           </div>
-
         )}
 
-        {/* =====================================================
-            DEPARTMENTS
-        ===================================================== */}
-
+        {/* ================= DEPARTMENTS ================= */}
         {activeTab === 'departments' && (
-
           <div>
-
             <header className="content-header">
               <h1>Manage Departments</h1>
             </header>
 
-            {/* ================= ADD DEPARTMENT ================= */}
-
-            <form
-              onSubmit={handleAddDept}
-              className="admin-inline-form"
-            >
-
+            <form onSubmit={handleAddDept} className="admin-inline-form">
               <input
                 type="text"
                 placeholder="Department Name"
                 value={newDept.name}
-                onChange={(e) =>
-                  setNewDept({
-                    ...newDept,
-                    name: e.target.value
-                  })
-                }
+                onChange={(e) => setNewDept({ ...newDept, name: e.target.value })}
                 required
               />
-
               <input
                 type="text"
                 placeholder="Department Head"
                 value={newDept.head}
-                onChange={(e) =>
-                  setNewDept({
-                    ...newDept,
-                    head: e.target.value
-                  })
-                }
+                onChange={(e) => setNewDept({ ...newDept, head: e.target.value })}
                 required
               />
-
               <input
                 type="text"
                 placeholder="Room Numbers"
                 value={newDept.rooms}
-                onChange={(e) =>
-                  setNewDept({
-                    ...newDept,
-                    rooms: e.target.value
-                  })
-                }
+                onChange={(e) => setNewDept({ ...newDept, rooms: e.target.value })}
                 required
               />
-
-              <button
-                type="submit"
-                className="add-btn"
-              >
+              <button type="submit" className="add-btn">
                 + Add Department
               </button>
-
             </form>
 
-            {/* ================= DEPARTMENT TABLE ================= */}
-
             <div className="table-container">
-
               <table>
-
                 <thead>
-
                   <tr>
-
                     <th>Department Name</th>
                     <th>Head of Dept</th>
                     <th>Rooms</th>
                     <th>Action</th>
-
                   </tr>
-
                 </thead>
-
                 <tbody>
-
                   {departments.length > 0 ? (
-
                     departments.map((dept) => (
-
                       <tr key={dept.id}>
-
+                        <td>{dept.department_name || dept.departmentName || dept.name || 'N/A'}</td>
+                        <td>{dept.department_head || dept.departmentHead || dept.head || 'N/A'}</td>
+                        <td>{dept.room_numbers || dept.rooms || dept.roomNumbers || 'N/A'}</td>
                         <td>
-                          {
-                            dept.department_name ||
-                            dept.departmentName ||
-                            dept.name ||
-                            'N/A'
-                          }
-                        </td>
-
-                        <td>
-                          {
-                            dept.department_head ||
-                            dept.departmentHead ||
-                            dept.head ||
-                            'N/A'
-                          }
-                        </td>
-
-                        <td>
-                          {
-                            dept.room_numbers ||
-                            dept.rooms ||
-                            dept.roomNumbers ||
-                            'N/A'
-                          }
-                        </td>
-
-                        <td>
-
                           <button
                             type="button"
                             className="delete-btn"
-                            onClick={() =>
-                              handleDeleteDept(
-                                dept.id
-                              )
-                            }
+                            onClick={() => handleDeleteDept(dept.id)}
                           >
                             Remove
                           </button>
-
                         </td>
-
                       </tr>
-
                     ))
-
                   ) : (
-
                     <tr>
-
-                      <td
-                        colSpan="4"
-                        style={{
-                          textAlign: 'center'
-                        }}
-                      >
+                      <td colSpan="4" style={{ textAlign: 'center' }}>
                         No departments added yet.
                       </td>
-
                     </tr>
-
                   )}
-
                 </tbody>
-
               </table>
-
             </div>
-
           </div>
-
         )}
 
       </main>
-
     </div>
   );
 };

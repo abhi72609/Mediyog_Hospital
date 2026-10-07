@@ -42,7 +42,7 @@ app.add_middleware(
 )
 
 
-# --- Seed or update default admin on application startup ---
+# --- Seed default admin ONLY if it doesn't exist yet ---
 @app.on_event("startup")
 def seed_admin():
     db = Session(engine)
@@ -51,10 +51,9 @@ def seed_admin():
             AdminModel.email == "admin@mediyog.com"
         ).first()
 
-        if admin:
-            admin.password = "admin@1020"
-            db.commit()
-        else:
+        # Only create the default account if it does not exist at all.
+        # This prevents overwriting custom passwords when restarting or pulling code!
+        if not admin:
             default_admin = AdminModel(
                 email="admin@mediyog.com",
                 password="admin@1020"
@@ -352,6 +351,30 @@ def create_appointment(
         "success": True,
         "message": "Appointment recorded",
         "id": new_appt.id
+    }
+
+
+@app.delete("/api/appointments/{appt_id}")
+def delete_appointment(
+    appt_id: int,
+    db: Session = Depends(get_db)
+):
+    appt = db.query(AppointmentModel).filter(
+        AppointmentModel.id == appt_id
+    ).first()
+
+    if not appt:
+        raise HTTPException(
+            status_code=404,
+            detail="Appointment not found"
+        )
+
+    db.delete(appt)
+    db.commit()
+
+    return {
+        "success": True,
+        "message": "Appointment deleted successfully"
     }
 
 

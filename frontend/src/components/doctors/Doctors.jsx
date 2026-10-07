@@ -3,7 +3,7 @@ import DoctorCard from "./DoctorCard.jsx";
 import "./Doctor.css";
 import defaultDoctorImage from "../../assets/Dr Sandeep Kumar.png";
 
-const API_URL = "http://127.0.0.1:8000";
+import { API_URL } from '../../Config.js';
 
 // Store only doctor information in localStorage.
 // Do NOT store large images here.
