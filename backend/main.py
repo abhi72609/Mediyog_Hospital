@@ -29,12 +29,16 @@ app.mount(
 )
 
 
-# --- Enable CORS ---
+# ============================================================
+# ENABLE CORS
+# ============================================================
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "http://127.0.0.1:5173"
+        "http://127.0.0.1:5173",
+        "https://mediyog-frontend-ffej.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -42,24 +46,28 @@ app.add_middleware(
 )
 
 
-# --- Seed default admin ONLY if it doesn't exist yet ---
+# ============================================================
+# SEED DEFAULT ADMIN
+# ============================================================
+
 @app.on_event("startup")
 def seed_admin():
     db = Session(engine)
+
     try:
         admin = db.query(AdminModel).filter(
             AdminModel.email == "admin@mediyog.com"
         ).first()
 
-        # Only create the default account if it does not exist at all.
-        # This prevents overwriting custom passwords when restarting or pulling code!
         if not admin:
             default_admin = AdminModel(
                 email="admin@mediyog.com",
                 password="admin@1020"
             )
+
             db.add(default_admin)
             db.commit()
+
     finally:
         db.close()
 
@@ -143,16 +151,13 @@ async def upload_doctor_image(
 ):
     upload_folder = "uploads/doctors"
 
-    # Create folder if it doesn't exist
     os.makedirs(upload_folder, exist_ok=True)
 
-    # Create complete file path
     file_path = os.path.join(
         upload_folder,
         file.filename
     )
 
-    # Save uploaded file
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(
             file.file,
