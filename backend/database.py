@@ -1,66 +1,56 @@
-# import os
-# from sqlalchemy import create_engine
-# from sqlalchemy.ext.declarative import declarative_base
-# from sqlalchemy.orm import sessionmaker
-
-# # SQLite database file will be created automatically in your backend folder
-# SQLALCHEMY_DATABASE_URL = "sqlite:///./mediyog_hospital.db"
-
-# engine = create_engine(
-#     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-# )
-# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Base = declarative_base()
-
-# def get_db():
-#     db = SessionLocal()
-#     try:
-#         yield db
-#     finally:
-#         db.close()
-
-
-
 import os
+from pathlib import Path
 
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
+# Load environment variables from backend/.env
+BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR / ".env")
 
-# Get the folder where database.py is located
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Read the Neon PostgreSQL connection URL
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Always use mediyog_hospital.db inside the backend folder
-DATABASE_PATH = os.path.join(
-    BASE_DIR,
-    "mediyog_hospital.db"
-)
+if not DATABASE_URL:
+    raise RuntimeError(
+        "DATABASE_URL is missing. Check your backend/.env file."
+    )
 
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
+# Use the psycopg 3 driver
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace(
+        "postgres://",
+        "postgresql+psycopg://",
+        1,
+    )
+elif DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace(
+        "postgresql://",
+        "postgresql+psycopg://",
+        1,
+    )
 
-
+# Create the PostgreSQL engine
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    connect_args={
-        "check_same_thread": False
-    }
+    DATABASE_URL,
+    pool_pre_ping=True,
 )
 
-
+# Create database sessions
 SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
-    bind=engine
+    bind=engine,
 )
 
-
+# Base class for SQLAlchemy models
 Base = declarative_base()
 
 
+# Provide a database session to FastAPI endpoints
 def get_db():
     db = SessionLocal()
-
     try:
         yield db
     finally:

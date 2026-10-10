@@ -1,13 +1,17 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime
+
 from datetime import datetime
+
+from sqlalchemy import Column, Integer, String, DateTime
 from database import Base
+
 
 class AdminModel(Base):
     __tablename__ = "admins"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     email = Column(String(100), unique=True, nullable=False)
-    password = Column(String(100), nullable=False)  # In production, use hashed passwords
+    password = Column(String(100), nullable=False)
+
 
 class DoctorModel(Base):
     __tablename__ = "doctors"
@@ -20,6 +24,7 @@ class DoctorModel(Base):
     phone = Column(String(20), nullable=False)
     image = Column(String(255), nullable=True)
 
+
 class DepartmentModel(Base):
     __tablename__ = "departments"
 
@@ -27,6 +32,7 @@ class DepartmentModel(Base):
     department_name = Column(String(100), nullable=False)
     department_head = Column(String(100), nullable=False)
     room_numbers = Column(String(50), nullable=False)
+
 
 class AppointmentModel(Base):
     __tablename__ = "appointments"
@@ -37,5 +43,5 @@ class AppointmentModel(Base):
     phone = Column(String(20), nullable=False)
     department = Column(String(50), nullable=False)
     date = Column(String(30), nullable=False)
-    status = Column(String(20), default="Pending")  # Pending / Confirmed
+    status = Column(String(20), default="Pending")
     created_at = Column(DateTime, default=datetime.utcnow)
