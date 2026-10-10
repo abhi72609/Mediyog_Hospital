@@ -111,15 +111,15 @@ To access the FastAPI documentation, open `http://127.0.0.1:8000/docs` in your b
 
 ## Deployment
 
-The frontend is deployed using Vercel, and the backend is deployed using Render.
+The Mediyog Hospital website is being developed for practical use by hospital staff and patients. The frontend is deployed on Vercel, and the backend API is hosted on Render.
 
-Make sure the frontend is configured with the correct backend API URL and that the backend allows requests from the deployed frontend through its CORS configuration.
+The project aims to simplify access to hospital information and make doctor appointment booking more convenient for patients.
 
 ## Contributors
 
 - Abhishek Kumar Raj
 - Amitash Mishra
 
-## License
+## Project Status
 
-This project was developed for learning and portfolio purposes.
+The website is being developed for delivery to the hospital. Further improvements and updates will be made based on the hospital's requirements and feedback.
